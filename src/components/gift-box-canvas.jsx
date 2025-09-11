@@ -4,7 +4,9 @@ import { useState, useEffect } from 'react';
 import {
   removeItemFromCanvas,
   selectItem,
-  deselectItem
+  deselectItem,
+  saveDesignData,
+  generateCanvasImage
 } from '../store/features/gift-box-slice';
 
 const DropIndicator = ({ position, size, isVisible }) => {
@@ -145,8 +147,13 @@ const GridOverlay = ({ gridSize, canvasSize, showGrid }) => {
 
 const GiftBoxCanvas = ({ activeItem, dragOverCanvas, dragPosition }) => {
   const dispatch = useDispatch();
-  const { canvasItems, canvasSize, gridSize, showGrid, selectedItemId } =
-    useSelector(state => state.giftBox);
+  const {
+    canvasItems = [],
+    canvasSize = { width: 800, height: 600 },
+    gridSize = 20,
+    showGrid = true,
+    selectedItemId = null
+  } = useSelector(state => state.giftBox || {});
 
   const [dropIndicator, setDropIndicator] = useState({
     isVisible: false,
@@ -162,6 +169,12 @@ const GiftBoxCanvas = ({ activeItem, dragOverCanvas, dragPosition }) => {
     if (selectedItemId) {
       dispatch(deselectItem());
     }
+  };
+
+  const handleSaveDesign = () => {
+    // Use Redux actions for clean logic separation
+    dispatch(saveDesignData());
+    dispatch(generateCanvasImage());
   };
 
   // Update drop indicator visibility when drag state changes
@@ -233,6 +246,12 @@ const GiftBoxCanvas = ({ activeItem, dragOverCanvas, dragPosition }) => {
             <span className='text-sm text-gray-600'>Show Grid</span>
           </label>
           <button
+            onClick={handleSaveDesign}
+            className='px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition-colors duration-200'
+          >
+            Save Design
+          </button>
+          <button
             onClick={() => dispatch({ type: 'giftBox/clearCanvas' })}
             className='px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors duration-200'
           >
@@ -265,11 +284,10 @@ const GiftBoxCanvas = ({ activeItem, dragOverCanvas, dragPosition }) => {
             isVisible={dropIndicator.isVisible && dragOverCanvas}
           />
 
-          {canvasItems.map(item => (
-            <CanvasItem key={item.id} item={item} />
-          ))}
+          {canvasItems &&
+            canvasItems.map(item => <CanvasItem key={item.id} item={item} />)}
 
-          {canvasItems.length === 0 && (
+          {(!canvasItems || canvasItems.length === 0) && (
             <div className='absolute inset-0 flex items-center justify-center text-gray-400 pointer-events-none'>
               <div className='text-center'>
                 <div className='text-lg mb-2'>🎁</div>
