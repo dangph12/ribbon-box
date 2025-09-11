@@ -21,6 +21,11 @@ const giftBoxSlice = createSlice({
   initialState,
   reducers: {
     addItemToCanvas: (state, action) => {
+      // Ensure canvasItems is always an array
+      if (!state.canvasItems) {
+        state.canvasItems = [];
+      }
+
       const { item, position } = action.payload;
       const newItem = {
         ...item,

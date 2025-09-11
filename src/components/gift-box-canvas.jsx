@@ -6,7 +6,8 @@ import {
   selectItem,
   deselectItem,
   saveDesignData,
-  generateCanvasImage
+  generateCanvasImage,
+  clearCanvas
 } from '../store/features/gift-box-slice';
 
 const DropIndicator = ({ position, size, isVisible }) => {
@@ -175,6 +176,11 @@ const GiftBoxCanvas = ({ activeItem, dragOverCanvas, dragPosition }) => {
     // Use Redux actions for clean logic separation
     dispatch(saveDesignData());
     dispatch(generateCanvasImage());
+
+    // Clear canvas after successful save
+    setTimeout(() => {
+      dispatch(clearCanvas());
+    }, 500); // Small delay to ensure save operations complete
   };
 
   // Update drop indicator visibility when drag state changes
@@ -252,7 +258,7 @@ const GiftBoxCanvas = ({ activeItem, dragOverCanvas, dragPosition }) => {
             Save Design
           </button>
           <button
-            onClick={() => dispatch({ type: 'giftBox/clearCanvas' })}
+            onClick={() => dispatch(clearCanvas())}
             className='px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors duration-200'
           >
             Clear Canvas
