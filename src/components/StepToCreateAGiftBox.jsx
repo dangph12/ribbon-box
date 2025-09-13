@@ -50,7 +50,7 @@ export default function StepToCreateAGiftBox() {
         </div>
 
         <button className="mt-16 px-10 py-4 rounded-full border border-black bg-[#FFFDF1] hover:bg-[#EDCCB3] transition font-semibold text-lg text-[#AD3542]">
-          <Link to={"/home/design"}>
+          <Link to={"/design-giftbox"}>
             Bắt đầu tuỳ chỉnh hộp quà của bạn với Ribbon Box nhé
           </Link>
         </button>
