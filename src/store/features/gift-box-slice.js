@@ -4,8 +4,10 @@ const GRID_SIZE = 20; // Grid size in pixels
 const CANVAS_WIDTH = 800;
 const CANVAS_HEIGHT = 600;
 
+const snapToGrid = (value, gridSize) => Math.round(value / gridSize) * gridSize;
+
 const initialState = {
-  canvasItems: [], // Items placed on the canvas
+  canvasItems: [],
   selectedItemId: null,
   canvasSize: {
     width: CANVAS_WIDTH,
@@ -21,7 +23,6 @@ const giftBoxSlice = createSlice({
   initialState,
   reducers: {
     addItemToCanvas: (state, action) => {
-      // Ensure canvasItems is always an array
       if (!state.canvasItems) {
         state.canvasItems = [];
       }
@@ -32,8 +33,8 @@ const giftBoxSlice = createSlice({
         id: `canvas-${item.id}-${Date.now()}`, // Unique ID for canvas item
         originalId: item.id,
         position: {
-          x: Math.round(position.x / state.gridSize) * state.gridSize,
-          y: Math.round(position.y / state.gridSize) * state.gridSize
+          x: snapToGrid(position.x, state.gridSize),
+          y: snapToGrid(position.y, state.gridSize)
         },
         size: {
           width: item.width * state.gridSize,
@@ -51,14 +52,14 @@ const giftBoxSlice = createSlice({
           x: Math.max(
             0,
             Math.min(
-              Math.round(position.x / state.gridSize) * state.gridSize,
+              snapToGrid(position.x, state.gridSize),
               state.canvasSize.width - item.size.width
             )
           ),
           y: Math.max(
             0,
             Math.min(
-              Math.round(position.y / state.gridSize) * state.gridSize,
+              snapToGrid(position.y, state.gridSize),
               state.canvasSize.height - item.size.height
             )
           )
@@ -108,8 +109,8 @@ const giftBoxSlice = createSlice({
       const item = state.canvasItems.find(item => item.id === itemId);
       if (item) {
         item.size = {
-          width: Math.round(size.width / state.gridSize) * state.gridSize,
-          height: Math.round(size.height / state.gridSize) * state.gridSize
+          width: snapToGrid(size.width, state.gridSize),
+          height: snapToGrid(size.height, state.gridSize)
         };
       }
     },
@@ -143,7 +144,6 @@ const giftBoxSlice = createSlice({
         }
       };
 
-      // Console log the JSON data
       console.log('🎁 Gift Box Design Data:', designData);
       console.log('📋 JSON for server:', JSON.stringify(designData, null, 2));
 
@@ -151,24 +151,19 @@ const giftBoxSlice = createSlice({
     },
 
     generateCanvasImage: state => {
-      // Create a canvas element for image generation
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
 
-      // Set canvas size
       canvas.width = state.canvasSize.width;
       canvas.height = state.canvasSize.height;
 
-      // Fill background
       ctx.fillStyle = '#ffffff';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Draw grid if enabled
       if (state.showGrid) {
         ctx.strokeStyle = '#e5e7eb';
         ctx.lineWidth = 0.5;
 
-        // Vertical lines
         for (let x = 0; x <= state.canvasSize.width; x += state.gridSize) {
           ctx.beginPath();
           ctx.moveTo(x, 0);
@@ -176,7 +171,6 @@ const giftBoxSlice = createSlice({
           ctx.stroke();
         }
 
-        // Horizontal lines
         for (let y = 0; y <= state.canvasSize.height; y += state.gridSize) {
           ctx.beginPath();
           ctx.moveTo(0, y);
@@ -185,38 +179,28 @@ const giftBoxSlice = createSlice({
         }
       }
 
-      // Draw items
       if (state.canvasItems && Array.isArray(state.canvasItems)) {
         const loadImagePromises = state.canvasItems.map(item => {
-          return new Promise((resolve) => {
+          return new Promise(resolve => {
             const x = item.position.x;
             const y = item.position.y;
             const width = item.size.width;
             const height = item.size.height;
 
-            // Try to load and draw image
             if (item.image) {
               const img = new Image();
-              img.crossOrigin = 'anonymous'; // Handle CORS
+              img.crossOrigin = 'anonymous';
               img.onload = () => {
                 try {
-                  // Save the current context state
                   ctx.save();
-                  
-                  // Create a clipping region for the rounded rectangle
                   const radius = 8;
                   ctx.beginPath();
                   ctx.roundRect(x, y, width, height, radius);
                   ctx.clip();
-                  
-                  // Draw the image to fill the entire area
                   ctx.drawImage(img, x, y, width, height);
-                  
-                  // Restore the context state
                   ctx.restore();
                 } catch (error) {
                   console.warn('Error drawing image:', error);
-                  // Fallback to background with text
                   drawFallbackBackground();
                 }
                 resolve();
@@ -227,20 +211,18 @@ const giftBoxSlice = createSlice({
                 resolve();
               };
               img.src = item.image;
-              
+
               function drawFallbackBackground() {
-                // Draw gray background for fallback
                 ctx.fillStyle = '#e5e7eb'; // gray-200
                 ctx.strokeStyle = '#d1d5db'; // gray-300
                 ctx.lineWidth = 2;
-                
+
                 const radius = 8;
                 ctx.beginPath();
                 ctx.roundRect(x, y, width, height, radius);
                 ctx.fill();
                 ctx.stroke();
-                
-                // Draw text
+
                 ctx.fillStyle = '#374151'; // gray-700
                 ctx.font = 'bold 16px Arial';
                 ctx.textAlign = 'center';
@@ -252,17 +234,16 @@ const giftBoxSlice = createSlice({
                 );
               }
             } else {
-              // No image, draw gray background with text
               ctx.fillStyle = '#e5e7eb'; // gray-200
               ctx.strokeStyle = '#d1d5db'; // gray-300
               ctx.lineWidth = 2;
-              
+
               const radius = 8;
               ctx.beginPath();
               ctx.roundRect(x, y, width, height, radius);
               ctx.fill();
               ctx.stroke();
-              
+
               ctx.fillStyle = '#374151'; // gray-700
               ctx.font = 'bold 16px Arial';
               ctx.textAlign = 'center';
@@ -277,24 +258,14 @@ const giftBoxSlice = createSlice({
           });
         });
 
-        // Wait for all images to load before generating the final image
         Promise.all(loadImagePromises).then(() => {
-          // Convert to blob and download
-          canvas.toBlob(blob => {
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.download = `gift-box-design-${Date.now()}.png`;
-            link.href = url;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            URL.revokeObjectURL(url);
-
-            console.log('📷 Canvas image downloaded successfully!');
-          }, 'image/png');
+          downloadCanvas(canvas);
         });
       } else {
-        // No items, just save the canvas as is
+        downloadCanvas(canvas);
+      }
+
+      function downloadCanvas(canvas) {
         canvas.toBlob(blob => {
           const url = URL.createObjectURL(blob);
           const link = document.createElement('a');

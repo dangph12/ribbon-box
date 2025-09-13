@@ -55,25 +55,6 @@ const GiftBoxCanvas = ({ activeItem, dragOverCanvas, dragPosition }) => {
         ? activeItem.size.height
         : activeItem.height * gridSize;
 
-      setDropIndicator(prev => ({
-        ...prev,
-        isVisible: true,
-        size: { width: itemWidth, height: itemHeight }
-      }));
-    } else {
-      setDropIndicator(prev => ({ ...prev, isVisible: false }));
-    }
-  }, [dragOverCanvas, activeItem, gridSize, dragPosition]);
-
-  useEffect(() => {
-    if (dragOverCanvas && activeItem && dragPosition) {
-      const itemWidth = activeItem.originalId
-        ? activeItem.size.width
-        : activeItem.width * gridSize;
-      const itemHeight = activeItem.originalId
-        ? activeItem.size.height
-        : activeItem.height * gridSize;
-
       const snappedX = Math.round(dragPosition.x / gridSize) * gridSize;
       const snappedY = Math.round(dragPosition.y / gridSize) * gridSize;
 
@@ -86,15 +67,18 @@ const GiftBoxCanvas = ({ activeItem, dragOverCanvas, dragPosition }) => {
         Math.min(snappedY, canvasSize.height - itemHeight)
       );
 
-      setDropIndicator(prev => ({
-        ...prev,
+      setDropIndicator({
+        isVisible: true,
         position: {
           x: constrainedX,
           y: constrainedY
-        }
-      }));
+        },
+        size: { width: itemWidth, height: itemHeight }
+      });
+    } else {
+      setDropIndicator(prev => ({ ...prev, isVisible: false }));
     }
-  }, [dragPosition, dragOverCanvas, activeItem, gridSize, canvasSize]);
+  }, [dragOverCanvas, activeItem, dragPosition, gridSize, canvasSize]);
 
   return (
     <div className='flex-1 bg-gray-50 p-6 overflow-auto'>

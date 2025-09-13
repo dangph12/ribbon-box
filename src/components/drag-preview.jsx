@@ -1,3 +1,5 @@
+import ItemImage from './item-image';
+
 const DragPreview = ({ item, gridSize }) => {
   if (!item) return null;
 
@@ -13,34 +15,11 @@ const DragPreview = ({ item, gridSize }) => {
       }}
     >
       <div className='w-full h-full flex items-center justify-center'>
-        {item.image ? (
-          <div className='w-full h-full relative'>
-            <img 
-              src={item.image} 
-              alt={item.name || `Item ${item.originalId || item.id}`}
-              className='w-full h-full object-cover rounded'
-              onError={(e) => {
-                // Fallback to text display if image fails to load
-                e.target.style.display = 'none';
-                e.target.nextSibling.style.display = 'flex';
-              }}
-            />
-            <div 
-              className='w-full h-full bg-blue-300 rounded flex items-center justify-center text-sm font-bold text-blue-700'
-              style={{ display: 'none' }}
-            >
-              {item.originalId
-                ? item.originalId.replace('item-', '')
-                : item.id.replace('item-', '')}
-            </div>
-          </div>
-        ) : (
-          <div className='w-full h-full bg-blue-300 rounded flex items-center justify-center text-sm font-bold text-blue-700'>
-            {item.originalId
-              ? item.originalId.replace('item-', '')
-              : item.id.replace('item-', '')}
-          </div>
-        )}
+        <ItemImage
+          item={item}
+          fallbackClassName='bg-blue-300'
+          textColorClass='text-blue-700'
+        />
       </div>
     </div>
   );

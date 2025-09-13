@@ -4,6 +4,7 @@ import {
   removeItemFromCanvas,
   selectItem
 } from '../store/features/gift-box-slice';
+import ItemImage from './item-image';
 
 const CanvasItem = ({ item }) => {
   const dispatch = useDispatch();
@@ -43,43 +44,20 @@ const CanvasItem = ({ item }) => {
       style={style}
       className={`
         absolute rounded-lg cursor-move flex items-center justify-center overflow-hidden
-        ${
-          isSelected
-            ? 'ring-2 ring-blue-500 ring-offset-2'
-            : ''
-        }
+        ${isSelected ? 'ring-2 ring-blue-500 ring-offset-2' : ''}
         ${isDragging ? 'z-50' : 'z-10'}
-        hover:ring-2 hover:ring-blue-300 hover:ring-offset-1 transition-all duration-200
+        hover:ring-2 hover:ring-blue-300 hover:ring-offset-1
       `}
       onClick={handleClick}
       {...listeners}
       {...attributes}
     >
       <div className='w-full h-full flex items-center justify-center'>
-        {item.image ? (
-          <div className='w-full h-full relative'>
-            <img 
-              src={item.image} 
-              alt={item.name || `Item ${item.originalId}`}
-              className='w-full h-full object-cover rounded-lg'
-              onError={(e) => {
-                // Fallback to text display if image fails to load
-                e.target.style.display = 'none';
-                e.target.nextSibling.style.display = 'flex';
-              }}
-            />
-            <div 
-              className='w-full h-full bg-gray-200 rounded-lg flex items-center justify-center text-sm font-bold text-gray-700'
-              style={{ display: 'none' }}
-            >
-              {item.originalId.replace('item-', '')}
-            </div>
-          </div>
-        ) : (
-          <div className='w-full h-full bg-gray-200 rounded-lg flex items-center justify-center text-sm font-bold text-gray-700'>
-            {item.originalId.replace('item-', '')}
-          </div>
-        )}
+        <ItemImage
+          item={item}
+          fallbackClassName='bg-gray-200'
+          textColorClass='text-gray-700'
+        />
       </div>
 
       {isSelected && (
