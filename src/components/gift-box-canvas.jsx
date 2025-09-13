@@ -1,150 +1,15 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { useDroppable, useDraggable } from '@dnd-kit/core';
+import { useDroppable } from '@dnd-kit/core';
 import { useState, useEffect } from 'react';
 import {
-  removeItemFromCanvas,
-  selectItem,
   deselectItem,
   saveDesignData,
   generateCanvasImage,
   clearCanvas
 } from '../store/features/gift-box-slice';
-
-const DropIndicator = ({ position, size, isVisible }) => {
-  if (!isVisible) return null;
-
-  return (
-    <div
-      className='absolute border-2 border-dashed border-blue-500 bg-blue-100 bg-opacity-50 rounded-lg pointer-events-none z-20 animate-pulse'
-      style={{
-        left: position.x,
-        top: position.y,
-        width: size.width,
-        height: size.height
-      }}
-    >
-      <div className='absolute inset-0 flex items-center justify-center text-blue-600 text-sm font-medium'>
-        <div className='bg-white bg-opacity-80 px-2 py-1 rounded text-xs'>
-          Drop here
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const CanvasItem = ({ item }) => {
-  const dispatch = useDispatch();
-  const selectedItemId = useSelector(state => state.giftBox.selectedItemId);
-  const isSelected = selectedItemId === item.id;
-
-  const { attributes, listeners, setNodeRef, transform, isDragging } =
-    useDraggable({
-      id: item.id,
-      data: item
-    });
-
-  const handleClick = e => {
-    e.stopPropagation();
-    dispatch(selectItem(item.id));
-  };
-
-  const handleDelete = e => {
-    e.stopPropagation();
-    dispatch(removeItemFromCanvas(item.id));
-  };
-
-  const style = {
-    left: item.position.x,
-    top: item.position.y,
-    width: item.size.width,
-    height: item.size.height,
-    transform: transform
-      ? `translate3d(${transform.x}px, ${transform.y}px, 0)`
-      : undefined,
-    opacity: isDragging ? 0.7 : 1
-  };
-
-  return (
-    <div
-      ref={setNodeRef}
-      style={style}
-      className={`
-        absolute bg-green-100 border-2 rounded-lg cursor-move flex items-center justify-center
-        ${
-          isSelected
-            ? 'border-blue-500 ring-2 ring-blue-300'
-            : 'border-green-300'
-        }
-        ${isDragging ? 'z-50' : 'z-10'}
-        hover:border-green-400 transition-colors duration-200
-      `}
-      onClick={handleClick}
-      {...listeners}
-      {...attributes}
-    >
-      <div className='text-center pointer-events-none'>
-        <div className='text-sm font-bold text-green-700'>
-          {item.originalId.replace('item-', '')}
-        </div>
-      </div>
-
-      {isSelected && (
-        <button
-          className='absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full text-xs hover:bg-red-600 pointer-events-auto'
-          onClick={handleDelete}
-        >
-          ×
-        </button>
-      )}
-    </div>
-  );
-};
-
-const GridOverlay = ({ gridSize, canvasSize, showGrid }) => {
-  if (!showGrid) return null;
-
-  const verticalLines = [];
-  const horizontalLines = [];
-
-  for (let x = 0; x <= canvasSize.width; x += gridSize) {
-    verticalLines.push(
-      <line
-        key={`v-${x}`}
-        x1={x}
-        y1={0}
-        x2={x}
-        y2={canvasSize.height}
-        stroke='#e5e7eb'
-        strokeWidth='0.5'
-      />
-    );
-  }
-
-  for (let y = 0; y <= canvasSize.height; y += gridSize) {
-    horizontalLines.push(
-      <line
-        key={`h-${y}`}
-        x1={0}
-        y1={y}
-        x2={canvasSize.width}
-        y2={y}
-        stroke='#e5e7eb'
-        strokeWidth='0.5'
-      />
-    );
-  }
-
-  return (
-    <svg
-      className='absolute inset-0 pointer-events-none z-0'
-      width={canvasSize.width}
-      height={canvasSize.height}
-    >
-      {verticalLines}
-      {horizontalLines}
-    </svg>
-  );
-};
+import DropIndicator from './drop-indicator';
+import CanvasItem from './canvas-item';
+import GridOverlay from './grid-overlay';
 
 const GiftBoxCanvas = ({ activeItem, dragOverCanvas, dragPosition }) => {
   const dispatch = useDispatch();
