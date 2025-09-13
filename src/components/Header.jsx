@@ -26,7 +26,7 @@ function Header() {
       <nav className="bg-[#FFFDF1] border-gray-200 w-full">
         <div className="flex flex-wrap items-center justify-between p-5">
           <Link
-            to="/home"
+            to="/"
             className="flex items-center space-x-1 rtl:space-x-reverse"
           >
             <img src={logo} className="max-h-40 max-w-full" alt="Logo" />
