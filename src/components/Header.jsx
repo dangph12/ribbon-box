@@ -7,18 +7,18 @@ function Header() {
   const [showDropdown, setShowDropdown] = useState(false);
 
   const navItems = [
-    { to: "/home", label: "Trang Chủ" },
-    { to: "/home/design", label: "Bắt Đầu Thiết Kế" },
-    { to: "/home/available", label: "Hộp Quà Có Sẵn" },
-    { to: "/home/about", label: "Về Chúng Tôi" },
-    { to: "/home/Contact", label: "Contact" },
+    { to: "/", label: "Trang Chủ" },
+    { to: "/design-giftbox", label: "Bắt Đầu Thiết Kế" },
+    { to: "/available", label: "Hộp Quà Có Sẵn" },
+    { to: "/about", label: "Về Chúng Tôi" },
+    { to: "/Contact", label: "Contact" },
   ];
 
   const serviceItems = [
-    { to: "/home/service/option1", label: "Quà 8-4" },
-    { to: "/home/service/option2", label: "Quà Sinh Nhật" },
-    { to: "/home/service/option3", label: "Quà Kỉ Niệm" },
-    { to: "/home/service/option3", label: "Quà Cưới" },
+    { to: "/service/option1", label: "Quà 8-4" },
+    { to: "/service/option2", label: "Quà Sinh Nhật" },
+    { to: "/service/option3", label: "Quà Kỉ Niệm" },
+    { to: "/service/option3", label: "Quà Cưới" },
   ];
 
   return (
