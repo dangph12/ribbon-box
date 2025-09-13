@@ -5,6 +5,7 @@ import HomePage from "~/app/page";
 import HomepageLayout from "../layouts/homepageLayout";
 import Homepage from "../app/homepage/page";
 import AboutUs from "../app/main-about-us/page";
+import ContactWithUs from "../app/contact/page";
 
 const router = createBrowserRouter([
   {
@@ -26,6 +27,10 @@ const router = createBrowserRouter([
       {
         path: "about",
         element: <AboutUs />,
+      },
+      {
+        path: "contact",
+        element: <ContactWithUs />,
       },
     ],
   },
