@@ -11,7 +11,7 @@ function Header() {
     { to: "/design-giftbox", label: "Bắt Đầu Thiết Kế" },
     { to: "/available", label: "Hộp Quà Có Sẵn" },
     { to: "/about", label: "Về Chúng Tôi" },
-    { to: "/Contact", label: "Contact" },
+    { to: "/contact", label: "Contact" },
   ];
 
   const serviceItems = [
