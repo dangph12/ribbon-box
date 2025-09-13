@@ -1,55 +1,30 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { DndContext, DragOverlay } from '@dnd-kit/core';
-import GiftItemsContainer from '../../components/gift-items-container';
-import GiftBoxCanvas from '../../components/gift-box-canvas';
+import GiftItemsContainer from '~/components/gift-items-container';
+import GiftBoxCanvas from '~/components/gift-box-canvas';
 import {
   addItemToCanvas,
   moveItemOnCanvas
-} from '../../store/features/gift-box-slice';
+} from '~/store/features/gift-box-slice';
 import { useState } from 'react';
-
-const DragPreview = ({ item, gridSize }) => {
-  if (!item) return null;
-
-  const width = item.originalId ? item.size.width : item.width * gridSize;
-  const height = item.originalId ? item.size.height : item.height * gridSize;
-
-  return (
-    <div
-      className='bg-blue-200 border-2 border-blue-400 rounded-lg opacity-80 flex items-center justify-center shadow-lg'
-      style={{
-        width: width,
-        height: height
-      }}
-    >
-      <div className='text-center pointer-events-none'>
-        <div className='text-sm font-bold text-blue-700'>
-          {item.originalId
-            ? item.originalId.replace('item-', '')
-            : item.id.replace('item-', '')}
-        </div>
-      </div>
-    </div>
-  );
-};
+import DragPreview from '~/components/drag-preview';
 
 const Page = () => {
   const dispatch = useDispatch();
   const { gridSize } = useSelector(state => state.giftBox);
   const [activeItem, setActiveItem] = useState(null);
   const [dragOverCanvas, setDragOverCanvas] = useState(false);
-  const [dragPosition, setDragPosition] = useState(null); // Changed from { x: 0, y: 0 } to null
+  const [dragPosition, setDragPosition] = useState(null);
 
   const handleDragStart = event => {
     setActiveItem(event.active.data.current);
-    setDragPosition(null); // Reset drag position when starting to drag
+    setDragPosition(null);
   };
 
   const handleDragMove = event => {
     const { over } = event;
     if (over && over.id === 'canvas') {
       setDragOverCanvas(true);
-      // Calculate position relative to the canvas
       const canvasRect = over.rect;
       const dragX =
         (event.active.rect.current.translated?.left || 0) - canvasRect.left;
@@ -59,7 +34,7 @@ const Page = () => {
       setDragPosition({ x: dragX, y: dragY });
     } else {
       setDragOverCanvas(false);
-      setDragPosition(null); // Clear position when not over canvas
+      setDragPosition(null);
     }
   };
 
@@ -76,21 +51,19 @@ const Page = () => {
     const { active, over } = event;
     setActiveItem(null);
     setDragOverCanvas(false);
-    setDragPosition(null); // Clear position on drag end
+    setDragPosition(null);
 
     if (over && over.id === 'canvas') {
       const canvasRect = over.rect;
       const activeRect = active.rect.current.translated;
       const item = active.data.current;
 
-      // Calculate drop position relative to canvas
       const dropPosition = {
         x: Math.max(0, activeRect ? activeRect.left - canvasRect.left : 0),
         y: Math.max(0, activeRect ? activeRect.top - canvasRect.top : 0)
       };
 
       if (item.originalId) {
-        // Moving existing canvas item
         dispatch(
           moveItemOnCanvas({
             itemId: active.id,
@@ -98,7 +71,6 @@ const Page = () => {
           })
         );
       } else {
-        // Adding new item from sidebar
         dispatch(
           addItemToCanvas({
             item,

@@ -1,150 +1,14 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { useDroppable, useDraggable } from '@dnd-kit/core';
+import { useDroppable } from '@dnd-kit/core';
 import { useState, useEffect } from 'react';
 import {
-  removeItemFromCanvas,
-  selectItem,
   deselectItem,
   saveDesignData,
-  generateCanvasImage,
   clearCanvas
 } from '../store/features/gift-box-slice';
-
-const DropIndicator = ({ position, size, isVisible }) => {
-  if (!isVisible) return null;
-
-  return (
-    <div
-      className='absolute border-2 border-dashed border-blue-500 bg-blue-100 bg-opacity-50 rounded-lg pointer-events-none z-20 animate-pulse'
-      style={{
-        left: position.x,
-        top: position.y,
-        width: size.width,
-        height: size.height
-      }}
-    >
-      <div className='absolute inset-0 flex items-center justify-center text-blue-600 text-sm font-medium'>
-        <div className='bg-white bg-opacity-80 px-2 py-1 rounded text-xs'>
-          Drop here
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const CanvasItem = ({ item }) => {
-  const dispatch = useDispatch();
-  const selectedItemId = useSelector(state => state.giftBox.selectedItemId);
-  const isSelected = selectedItemId === item.id;
-
-  const { attributes, listeners, setNodeRef, transform, isDragging } =
-    useDraggable({
-      id: item.id,
-      data: item
-    });
-
-  const handleClick = e => {
-    e.stopPropagation();
-    dispatch(selectItem(item.id));
-  };
-
-  const handleDelete = e => {
-    e.stopPropagation();
-    dispatch(removeItemFromCanvas(item.id));
-  };
-
-  const style = {
-    left: item.position.x,
-    top: item.position.y,
-    width: item.size.width,
-    height: item.size.height,
-    transform: transform
-      ? `translate3d(${transform.x}px, ${transform.y}px, 0)`
-      : undefined,
-    opacity: isDragging ? 0.7 : 1
-  };
-
-  return (
-    <div
-      ref={setNodeRef}
-      style={style}
-      className={`
-        absolute bg-green-100 border-2 rounded-lg cursor-move flex items-center justify-center
-        ${
-          isSelected
-            ? 'border-blue-500 ring-2 ring-blue-300'
-            : 'border-green-300'
-        }
-        ${isDragging ? 'z-50' : 'z-10'}
-        hover:border-green-400 transition-colors duration-200
-      `}
-      onClick={handleClick}
-      {...listeners}
-      {...attributes}
-    >
-      <div className='text-center pointer-events-none'>
-        <div className='text-sm font-bold text-green-700'>
-          {item.originalId.replace('item-', '')}
-        </div>
-      </div>
-
-      {isSelected && (
-        <button
-          className='absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full text-xs hover:bg-red-600 pointer-events-auto'
-          onClick={handleDelete}
-        >
-          ×
-        </button>
-      )}
-    </div>
-  );
-};
-
-const GridOverlay = ({ gridSize, canvasSize, showGrid }) => {
-  if (!showGrid) return null;
-
-  const verticalLines = [];
-  const horizontalLines = [];
-
-  for (let x = 0; x <= canvasSize.width; x += gridSize) {
-    verticalLines.push(
-      <line
-        key={`v-${x}`}
-        x1={x}
-        y1={0}
-        x2={x}
-        y2={canvasSize.height}
-        stroke='#e5e7eb'
-        strokeWidth='0.5'
-      />
-    );
-  }
-
-  for (let y = 0; y <= canvasSize.height; y += gridSize) {
-    horizontalLines.push(
-      <line
-        key={`h-${y}`}
-        x1={0}
-        y1={y}
-        x2={canvasSize.width}
-        y2={y}
-        stroke='#e5e7eb'
-        strokeWidth='0.5'
-      />
-    );
-  }
-
-  return (
-    <svg
-      className='absolute inset-0 pointer-events-none z-0'
-      width={canvasSize.width}
-      height={canvasSize.height}
-    >
-      {verticalLines}
-      {horizontalLines}
-    </svg>
-  );
-};
+import DropIndicator from './drop-indicator';
+import CanvasItem from './canvas-item';
+import GridOverlay from './grid-overlay';
 
 const GiftBoxCanvas = ({ activeItem, dragOverCanvas, dragPosition }) => {
   const dispatch = useDispatch();
@@ -172,38 +36,152 @@ const GiftBoxCanvas = ({ activeItem, dragOverCanvas, dragPosition }) => {
     }
   };
 
-  const handleSaveDesign = () => {
-    // Use Redux actions for clean logic separation
+  const handleSaveDesign = async () => {
     dispatch(saveDesignData());
-    dispatch(generateCanvasImage());
 
-    // Clear canvas after successful save
+    // Generate and download canvas image
+    await generateCanvasImage();
+
     setTimeout(() => {
       dispatch(clearCanvas());
-    }, 500); // Small delay to ensure save operations complete
+    }, 500);
   };
 
-  // Update drop indicator visibility when drag state changes
-  useEffect(() => {
-    if (dragOverCanvas && activeItem && dragPosition) {
-      const itemWidth = activeItem.originalId
-        ? activeItem.size.width
-        : activeItem.width * gridSize;
-      const itemHeight = activeItem.originalId
-        ? activeItem.size.height
-        : activeItem.height * gridSize;
+  const generateCanvasImage = async () => {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
 
-      setDropIndicator(prev => ({
-        ...prev,
-        isVisible: true,
-        size: { width: itemWidth, height: itemHeight }
-      }));
-    } else {
-      setDropIndicator(prev => ({ ...prev, isVisible: false }));
+    canvas.width = canvasSize.width;
+    canvas.height = canvasSize.height;
+
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.globalCompositeOperation = 'source-over';
+
+    if (showGrid) {
+      ctx.strokeStyle = '#e5e7eb';
+      ctx.lineWidth = 0.5;
+
+      for (let x = 0; x <= canvasSize.width; x += gridSize) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, canvasSize.height);
+        ctx.stroke();
+      }
+
+      for (let y = 0; y <= canvasSize.height; y += gridSize) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(canvasSize.width, y);
+        ctx.stroke();
+      }
     }
-  }, [dragOverCanvas, activeItem, gridSize, dragPosition]);
 
-  // Update drop indicator position in real-time based on drag position
+    if (canvasItems && Array.isArray(canvasItems)) {
+      const loadImagePromises = canvasItems.map(item => {
+        return new Promise(resolve => {
+          const x = item.position.x;
+          const y = item.position.y;
+          const width = item.size.width;
+          const height = item.size.height;
+
+          if (item.image) {
+            const img = new Image();
+            img.crossOrigin = 'anonymous';
+            img.onload = () => {
+              try {
+                ctx.save();
+
+                const radius = 8;
+                ctx.beginPath();
+                ctx.roundRect(x, y, width, height, radius);
+                ctx.clip();
+
+                ctx.drawImage(img, x, y, width, height);
+
+                ctx.restore();
+              } catch (error) {
+                console.warn('Error drawing image:', error);
+                drawFallbackBackground();
+              }
+              resolve();
+            };
+            img.onerror = () => {
+              console.warn('Failed to load image:', item.image);
+              drawFallbackBackground();
+              resolve();
+            };
+            img.src = item.image;
+
+            function drawFallbackBackground() {
+              // Draw gray background for fallback
+              ctx.fillStyle = '#e5e7eb'; // gray-200
+              ctx.strokeStyle = '#d1d5db'; // gray-300
+              ctx.lineWidth = 2;
+
+              const radius = 8;
+              ctx.beginPath();
+              ctx.roundRect(x, y, width, height, radius);
+              ctx.fill();
+              ctx.stroke();
+
+              // Draw text
+              ctx.fillStyle = '#374151'; // gray-700
+              ctx.font = 'bold 16px Arial';
+              ctx.textAlign = 'center';
+              ctx.textBaseline = 'middle';
+              ctx.fillText(
+                item.originalId.replace('item-', ''),
+                x + width / 2,
+                y + height / 2
+              );
+            }
+          } else {
+            // No image, draw gray background with text
+            ctx.fillStyle = '#e5e7eb'; // gray-200
+            ctx.strokeStyle = '#d1d5db'; // gray-300
+            ctx.lineWidth = 2;
+
+            const radius = 8;
+            ctx.beginPath();
+            ctx.roundRect(x, y, width, height, radius);
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.fillStyle = '#374151'; // gray-700
+            ctx.font = 'bold 16px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(
+              item.originalId.replace('item-', ''),
+              x + width / 2,
+              y + height / 2
+            );
+            resolve();
+          }
+        });
+      });
+
+      // Wait for all images to load before generating the final image
+      await Promise.all(loadImagePromises);
+    }
+
+    // Download the canvas
+    canvas.toBlob(blob => {
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.download = `gift-box-design-${Date.now()}.png`;
+      link.href = url;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+
+      console.log('📷 Canvas image downloaded successfully!');
+    }, 'image/png');
+  };
+
   useEffect(() => {
     if (dragOverCanvas && activeItem && dragPosition) {
       const itemWidth = activeItem.originalId
@@ -213,11 +191,9 @@ const GiftBoxCanvas = ({ activeItem, dragOverCanvas, dragPosition }) => {
         ? activeItem.size.height
         : activeItem.height * gridSize;
 
-      // Snap to grid
       const snappedX = Math.round(dragPosition.x / gridSize) * gridSize;
       const snappedY = Math.round(dragPosition.y / gridSize) * gridSize;
 
-      // Constrain within canvas bounds
       const constrainedX = Math.max(
         0,
         Math.min(snappedX, canvasSize.width - itemWidth)
@@ -227,15 +203,18 @@ const GiftBoxCanvas = ({ activeItem, dragOverCanvas, dragPosition }) => {
         Math.min(snappedY, canvasSize.height - itemHeight)
       );
 
-      setDropIndicator(prev => ({
-        ...prev,
+      setDropIndicator({
+        isVisible: true,
         position: {
           x: constrainedX,
           y: constrainedY
-        }
-      }));
+        },
+        size: { width: itemWidth, height: itemHeight }
+      });
+    } else {
+      setDropIndicator(prev => ({ ...prev, isVisible: false }));
     }
-  }, [dragPosition, dragOverCanvas, activeItem, gridSize, canvasSize]);
+  }, [dragOverCanvas, activeItem, dragPosition, gridSize, canvasSize]);
 
   return (
     <div className='flex-1 bg-gray-50 p-6 overflow-auto'>
