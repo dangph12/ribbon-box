@@ -116,7 +116,6 @@ const giftBoxSlice = createSlice({
     },
 
     saveDesignData: state => {
-      // Create JSON data structure
       const designData = {
         id: Date.now().toString(),
         createdAt: new Date().toISOString(),
@@ -148,137 +147,6 @@ const giftBoxSlice = createSlice({
       console.log('📋 JSON for server:', JSON.stringify(designData, null, 2));
 
       return designData;
-    },
-
-    generateCanvasImage: state => {
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-
-      canvas.width = state.canvasSize.width;
-      canvas.height = state.canvasSize.height;
-
-      ctx.fillStyle = '#ffffff';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      if (state.showGrid) {
-        ctx.strokeStyle = '#e5e7eb';
-        ctx.lineWidth = 0.5;
-
-        for (let x = 0; x <= state.canvasSize.width; x += state.gridSize) {
-          ctx.beginPath();
-          ctx.moveTo(x, 0);
-          ctx.lineTo(x, state.canvasSize.height);
-          ctx.stroke();
-        }
-
-        for (let y = 0; y <= state.canvasSize.height; y += state.gridSize) {
-          ctx.beginPath();
-          ctx.moveTo(0, y);
-          ctx.lineTo(state.canvasSize.width, y);
-          ctx.stroke();
-        }
-      }
-
-      if (state.canvasItems && Array.isArray(state.canvasItems)) {
-        const loadImagePromises = state.canvasItems.map(item => {
-          return new Promise(resolve => {
-            const x = item.position.x;
-            const y = item.position.y;
-            const width = item.size.width;
-            const height = item.size.height;
-
-            if (item.image) {
-              const img = new Image();
-              img.crossOrigin = 'anonymous';
-              img.onload = () => {
-                try {
-                  ctx.save();
-                  const radius = 8;
-                  ctx.beginPath();
-                  ctx.roundRect(x, y, width, height, radius);
-                  ctx.clip();
-                  ctx.drawImage(img, x, y, width, height);
-                  ctx.restore();
-                } catch (error) {
-                  console.warn('Error drawing image:', error);
-                  drawFallbackBackground();
-                }
-                resolve();
-              };
-              img.onerror = () => {
-                console.warn('Failed to load image:', item.image);
-                drawFallbackBackground();
-                resolve();
-              };
-              img.src = item.image;
-
-              function drawFallbackBackground() {
-                ctx.fillStyle = '#e5e7eb'; // gray-200
-                ctx.strokeStyle = '#d1d5db'; // gray-300
-                ctx.lineWidth = 2;
-
-                const radius = 8;
-                ctx.beginPath();
-                ctx.roundRect(x, y, width, height, radius);
-                ctx.fill();
-                ctx.stroke();
-
-                ctx.fillStyle = '#374151'; // gray-700
-                ctx.font = 'bold 16px Arial';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.fillText(
-                  item.originalId.replace('item-', ''),
-                  x + width / 2,
-                  y + height / 2
-                );
-              }
-            } else {
-              ctx.fillStyle = '#e5e7eb'; // gray-200
-              ctx.strokeStyle = '#d1d5db'; // gray-300
-              ctx.lineWidth = 2;
-
-              const radius = 8;
-              ctx.beginPath();
-              ctx.roundRect(x, y, width, height, radius);
-              ctx.fill();
-              ctx.stroke();
-
-              ctx.fillStyle = '#374151'; // gray-700
-              ctx.font = 'bold 16px Arial';
-              ctx.textAlign = 'center';
-              ctx.textBaseline = 'middle';
-              ctx.fillText(
-                item.originalId.replace('item-', ''),
-                x + width / 2,
-                y + height / 2
-              );
-              resolve();
-            }
-          });
-        });
-
-        Promise.all(loadImagePromises).then(() => {
-          downloadCanvas(canvas);
-        });
-      } else {
-        downloadCanvas(canvas);
-      }
-
-      function downloadCanvas(canvas) {
-        canvas.toBlob(blob => {
-          const url = URL.createObjectURL(blob);
-          const link = document.createElement('a');
-          link.download = `gift-box-design-${Date.now()}.png`;
-          link.href = url;
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          URL.revokeObjectURL(url);
-
-          console.log('📷 Canvas image downloaded successfully!');
-        }, 'image/png');
-      }
     }
   }
 });
@@ -295,8 +163,7 @@ export const {
   setDraggedItem,
   clearCanvas,
   resizeItem,
-  saveDesignData,
-  generateCanvasImage
+  saveDesignData
 } = giftBoxSlice.actions;
 
 export default giftBoxSlice.reducer;

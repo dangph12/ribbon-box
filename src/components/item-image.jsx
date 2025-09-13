@@ -16,6 +16,7 @@ const ItemImage = ({
           src={item.image}
           alt={item.name || `Item ${getItemId()}`}
           className='w-full h-full object-cover rounded-lg'
+          crossOrigin='anonymous'
           onError={e => {
             e.target.style.display = 'none';
             e.target.nextSibling.style.display = 'flex';

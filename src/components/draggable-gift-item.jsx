@@ -31,12 +31,13 @@ const DraggableGiftItem = ({ item }) => {
       `}
     >
       <div className='text-center'>
-        <div className='w-16 h-16 bg-gray-100 rounded-md mx-auto mb-2 flex items-center justify-center overflow-hidden'>
+        <div className='w-16 h-16 rounded-md mx-auto mb-2 flex items-center justify-center overflow-hidden'>
           {item.image ? (
             <img
               src={item.image}
               alt={item.name || `Item ${item.id}`}
-              className='w-full h-full object-cover rounded-md'
+              className='w-full h-full object-contain rounded-md'
+              crossOrigin='anonymous'
               onError={e => {
                 e.target.style.display = 'none';
                 e.target.nextSibling.style.display = 'flex';

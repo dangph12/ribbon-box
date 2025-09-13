@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import {
   deselectItem,
   saveDesignData,
-  generateCanvasImage,
   clearCanvas
 } from '../store/features/gift-box-slice';
 import DropIndicator from './drop-indicator';
@@ -37,13 +36,150 @@ const GiftBoxCanvas = ({ activeItem, dragOverCanvas, dragPosition }) => {
     }
   };
 
-  const handleSaveDesign = () => {
+  const handleSaveDesign = async () => {
     dispatch(saveDesignData());
-    dispatch(generateCanvasImage());
+
+    // Generate and download canvas image
+    await generateCanvasImage();
 
     setTimeout(() => {
       dispatch(clearCanvas());
     }, 500);
+  };
+
+  const generateCanvasImage = async () => {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+
+    canvas.width = canvasSize.width;
+    canvas.height = canvasSize.height;
+
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.globalCompositeOperation = 'source-over';
+
+    if (showGrid) {
+      ctx.strokeStyle = '#e5e7eb';
+      ctx.lineWidth = 0.5;
+
+      for (let x = 0; x <= canvasSize.width; x += gridSize) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, canvasSize.height);
+        ctx.stroke();
+      }
+
+      for (let y = 0; y <= canvasSize.height; y += gridSize) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(canvasSize.width, y);
+        ctx.stroke();
+      }
+    }
+
+    if (canvasItems && Array.isArray(canvasItems)) {
+      const loadImagePromises = canvasItems.map(item => {
+        return new Promise(resolve => {
+          const x = item.position.x;
+          const y = item.position.y;
+          const width = item.size.width;
+          const height = item.size.height;
+
+          if (item.image) {
+            const img = new Image();
+            img.crossOrigin = 'anonymous';
+            img.onload = () => {
+              try {
+                ctx.save();
+
+                const radius = 8;
+                ctx.beginPath();
+                ctx.roundRect(x, y, width, height, radius);
+                ctx.clip();
+
+                ctx.drawImage(img, x, y, width, height);
+
+                ctx.restore();
+              } catch (error) {
+                console.warn('Error drawing image:', error);
+                drawFallbackBackground();
+              }
+              resolve();
+            };
+            img.onerror = () => {
+              console.warn('Failed to load image:', item.image);
+              drawFallbackBackground();
+              resolve();
+            };
+            img.src = item.image;
+
+            function drawFallbackBackground() {
+              // Draw gray background for fallback
+              ctx.fillStyle = '#e5e7eb'; // gray-200
+              ctx.strokeStyle = '#d1d5db'; // gray-300
+              ctx.lineWidth = 2;
+
+              const radius = 8;
+              ctx.beginPath();
+              ctx.roundRect(x, y, width, height, radius);
+              ctx.fill();
+              ctx.stroke();
+
+              // Draw text
+              ctx.fillStyle = '#374151'; // gray-700
+              ctx.font = 'bold 16px Arial';
+              ctx.textAlign = 'center';
+              ctx.textBaseline = 'middle';
+              ctx.fillText(
+                item.originalId.replace('item-', ''),
+                x + width / 2,
+                y + height / 2
+              );
+            }
+          } else {
+            // No image, draw gray background with text
+            ctx.fillStyle = '#e5e7eb'; // gray-200
+            ctx.strokeStyle = '#d1d5db'; // gray-300
+            ctx.lineWidth = 2;
+
+            const radius = 8;
+            ctx.beginPath();
+            ctx.roundRect(x, y, width, height, radius);
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.fillStyle = '#374151'; // gray-700
+            ctx.font = 'bold 16px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(
+              item.originalId.replace('item-', ''),
+              x + width / 2,
+              y + height / 2
+            );
+            resolve();
+          }
+        });
+      });
+
+      // Wait for all images to load before generating the final image
+      await Promise.all(loadImagePromises);
+    }
+
+    // Download the canvas
+    canvas.toBlob(blob => {
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.download = `gift-box-design-${Date.now()}.png`;
+      link.href = url;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+
+      console.log('📷 Canvas image downloaded successfully!');
+    }, 'image/png');
   };
 
   useEffect(() => {
