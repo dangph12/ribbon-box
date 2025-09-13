@@ -34,7 +34,7 @@ const CanvasItem = ({ item }) => {
     transform: transform
       ? `translate3d(${transform.x}px, ${transform.y}px, 0)`
       : undefined,
-    opacity: isDragging ? 0.7 : 1
+    opacity: isDragging ? 0 : 1
   };
 
   return (
@@ -42,23 +42,44 @@ const CanvasItem = ({ item }) => {
       ref={setNodeRef}
       style={style}
       className={`
-        absolute bg-green-100 border-2 rounded-lg cursor-move flex items-center justify-center
+        absolute rounded-lg cursor-move flex items-center justify-center overflow-hidden
         ${
           isSelected
-            ? 'border-blue-500 ring-2 ring-blue-300'
-            : 'border-green-300'
+            ? 'ring-2 ring-blue-500 ring-offset-2'
+            : ''
         }
         ${isDragging ? 'z-50' : 'z-10'}
-        hover:border-green-400 transition-colors duration-200
+        hover:ring-2 hover:ring-blue-300 hover:ring-offset-1 transition-all duration-200
       `}
       onClick={handleClick}
       {...listeners}
       {...attributes}
     >
-      <div className='text-center pointer-events-none'>
-        <div className='text-sm font-bold text-green-700'>
-          {item.originalId.replace('item-', '')}
-        </div>
+      <div className='w-full h-full flex items-center justify-center'>
+        {item.image ? (
+          <div className='w-full h-full relative'>
+            <img 
+              src={item.image} 
+              alt={item.name || `Item ${item.originalId}`}
+              className='w-full h-full object-cover rounded-lg'
+              onError={(e) => {
+                // Fallback to text display if image fails to load
+                e.target.style.display = 'none';
+                e.target.nextSibling.style.display = 'flex';
+              }}
+            />
+            <div 
+              className='w-full h-full bg-gray-200 rounded-lg flex items-center justify-center text-sm font-bold text-gray-700'
+              style={{ display: 'none' }}
+            >
+              {item.originalId.replace('item-', '')}
+            </div>
+          </div>
+        ) : (
+          <div className='w-full h-full bg-gray-200 rounded-lg flex items-center justify-center text-sm font-bold text-gray-700'>
+            {item.originalId.replace('item-', '')}
+          </div>
+        )}
       </div>
 
       {isSelected && (

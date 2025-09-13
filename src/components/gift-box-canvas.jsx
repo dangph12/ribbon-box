@@ -38,17 +38,14 @@ const GiftBoxCanvas = ({ activeItem, dragOverCanvas, dragPosition }) => {
   };
 
   const handleSaveDesign = () => {
-    // Use Redux actions for clean logic separation
     dispatch(saveDesignData());
     dispatch(generateCanvasImage());
 
-    // Clear canvas after successful save
     setTimeout(() => {
       dispatch(clearCanvas());
-    }, 500); // Small delay to ensure save operations complete
+    }, 500);
   };
 
-  // Update drop indicator visibility when drag state changes
   useEffect(() => {
     if (dragOverCanvas && activeItem && dragPosition) {
       const itemWidth = activeItem.originalId
@@ -68,7 +65,6 @@ const GiftBoxCanvas = ({ activeItem, dragOverCanvas, dragPosition }) => {
     }
   }, [dragOverCanvas, activeItem, gridSize, dragPosition]);
 
-  // Update drop indicator position in real-time based on drag position
   useEffect(() => {
     if (dragOverCanvas && activeItem && dragPosition) {
       const itemWidth = activeItem.originalId
@@ -78,11 +74,9 @@ const GiftBoxCanvas = ({ activeItem, dragOverCanvas, dragPosition }) => {
         ? activeItem.size.height
         : activeItem.height * gridSize;
 
-      // Snap to grid
       const snappedX = Math.round(dragPosition.x / gridSize) * gridSize;
       const snappedY = Math.round(dragPosition.y / gridSize) * gridSize;
 
-      // Constrain within canvas bounds
       const constrainedX = Math.max(
         0,
         Math.min(snappedX, canvasSize.width - itemWidth)

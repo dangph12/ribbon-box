@@ -1,6 +1,30 @@
 [
-  { "id": "item-1", "width": 4, "height": 4 },
-  { "id": "item-2", "width": 4, "height": 4 },
-  { "id": "item-3", "width": 4, "height": 4 },
-  { "id": "item-4", "width": 4, "height": 4 }
+  { 
+    "id": "item-1", 
+    "width": 4, 
+    "height": 4,
+    "image": "https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=100&h=100&fit=crop&crop=center",
+    "name": "Gift Box"
+  },
+  { 
+    "id": "item-2", 
+    "width": 4, 
+    "height": 4,
+    "image": "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=100&h=100&fit=crop&crop=center",
+    "name": "Sneakers"
+  },
+  { 
+    "id": "item-3", 
+    "width": 4, 
+    "height": 4,
+    "image": "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=100&h=100&fit=crop&crop=center",
+    "name": "Book"
+  },
+  { 
+    "id": "item-4", 
+    "width": 4, 
+    "height": 4,
+    "image": "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=100&h=100&fit=crop&crop=center",
+    "name": "Phone"
+  }
 ]

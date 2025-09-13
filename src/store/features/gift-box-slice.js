@@ -187,50 +187,127 @@ const giftBoxSlice = createSlice({
 
       // Draw items
       if (state.canvasItems && Array.isArray(state.canvasItems)) {
-        state.canvasItems.forEach(item => {
-          // Draw item background
-          ctx.fillStyle = '#dcfce7'; // green-100
-          ctx.strokeStyle = '#bbf7d0'; // green-200
-          ctx.lineWidth = 2;
+        const loadImagePromises = state.canvasItems.map(item => {
+          return new Promise((resolve) => {
+            const x = item.position.x;
+            const y = item.position.y;
+            const width = item.size.width;
+            const height = item.size.height;
 
-          const x = item.position.x;
-          const y = item.position.y;
-          const width = item.size.width;
-          const height = item.size.height;
-
-          // Draw rounded rectangle
-          const radius = 8;
-          ctx.beginPath();
-          ctx.roundRect(x, y, width, height, radius);
-          ctx.fill();
-          ctx.stroke();
-
-          // Draw item number
-          ctx.fillStyle = '#166534'; // green-800
-          ctx.font = 'bold 16px Arial';
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'middle';
-          ctx.fillText(
-            item.originalId.replace('item-', ''),
-            x + width / 2,
-            y + height / 2
-          );
+            // Try to load and draw image
+            if (item.image) {
+              const img = new Image();
+              img.crossOrigin = 'anonymous'; // Handle CORS
+              img.onload = () => {
+                try {
+                  // Save the current context state
+                  ctx.save();
+                  
+                  // Create a clipping region for the rounded rectangle
+                  const radius = 8;
+                  ctx.beginPath();
+                  ctx.roundRect(x, y, width, height, radius);
+                  ctx.clip();
+                  
+                  // Draw the image to fill the entire area
+                  ctx.drawImage(img, x, y, width, height);
+                  
+                  // Restore the context state
+                  ctx.restore();
+                } catch (error) {
+                  console.warn('Error drawing image:', error);
+                  // Fallback to background with text
+                  drawFallbackBackground();
+                }
+                resolve();
+              };
+              img.onerror = () => {
+                console.warn('Failed to load image:', item.image);
+                drawFallbackBackground();
+                resolve();
+              };
+              img.src = item.image;
+              
+              function drawFallbackBackground() {
+                // Draw gray background for fallback
+                ctx.fillStyle = '#e5e7eb'; // gray-200
+                ctx.strokeStyle = '#d1d5db'; // gray-300
+                ctx.lineWidth = 2;
+                
+                const radius = 8;
+                ctx.beginPath();
+                ctx.roundRect(x, y, width, height, radius);
+                ctx.fill();
+                ctx.stroke();
+                
+                // Draw text
+                ctx.fillStyle = '#374151'; // gray-700
+                ctx.font = 'bold 16px Arial';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(
+                  item.originalId.replace('item-', ''),
+                  x + width / 2,
+                  y + height / 2
+                );
+              }
+            } else {
+              // No image, draw gray background with text
+              ctx.fillStyle = '#e5e7eb'; // gray-200
+              ctx.strokeStyle = '#d1d5db'; // gray-300
+              ctx.lineWidth = 2;
+              
+              const radius = 8;
+              ctx.beginPath();
+              ctx.roundRect(x, y, width, height, radius);
+              ctx.fill();
+              ctx.stroke();
+              
+              ctx.fillStyle = '#374151'; // gray-700
+              ctx.font = 'bold 16px Arial';
+              ctx.textAlign = 'center';
+              ctx.textBaseline = 'middle';
+              ctx.fillText(
+                item.originalId.replace('item-', ''),
+                x + width / 2,
+                y + height / 2
+              );
+              resolve();
+            }
+          });
         });
+
+        // Wait for all images to load before generating the final image
+        Promise.all(loadImagePromises).then(() => {
+          // Convert to blob and download
+          canvas.toBlob(blob => {
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.download = `gift-box-design-${Date.now()}.png`;
+            link.href = url;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+
+            console.log('📷 Canvas image downloaded successfully!');
+          }, 'image/png');
+        });
+      } else {
+        // No items, just save the canvas as is
+        canvas.toBlob(blob => {
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.download = `gift-box-design-${Date.now()}.png`;
+          link.href = url;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          URL.revokeObjectURL(url);
+
+          console.log('📷 Canvas image downloaded successfully!');
+        }, 'image/png');
       }
-
-      // Convert to blob and download
-      canvas.toBlob(blob => {
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.download = `gift-box-design-${Date.now()}.png`;
-        link.href = url;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
-
-        console.log('📷 Canvas image downloaded successfully!');
-      }, 'image/png');
     }
   }
 });

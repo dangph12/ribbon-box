@@ -31,10 +31,30 @@ const DraggableGiftItem = ({ item }) => {
       `}
     >
       <div className='text-center'>
-        <div className='w-12 h-12 bg-blue-500 rounded-md mx-auto mb-2 flex items-center justify-center text-white font-bold'>
-          {item.id.replace('item-', '')}
+        <div className='w-16 h-16 bg-gray-100 rounded-md mx-auto mb-2 flex items-center justify-center overflow-hidden'>
+          {item.image ? (
+            <img 
+              src={item.image} 
+              alt={item.name || `Item ${item.id}`}
+              className='w-full h-full object-cover rounded-md'
+              onError={(e) => {
+                // Fallback to number display if image fails to load
+                e.target.style.display = 'none';
+                e.target.nextSibling.style.display = 'flex';
+              }}
+            />
+          ) : null}
+          <div 
+            className='w-full h-full bg-blue-500 rounded-md flex items-center justify-center text-white font-bold'
+            style={{ display: item.image ? 'none' : 'flex' }}
+          >
+            {item.id.replace('item-', '')}
+          </div>
         </div>
-        <p className='text-sm text-gray-700'>
+        <p className='text-xs text-gray-700 font-medium'>
+          {item.name || `Item ${item.id.replace('item-', '')}`}
+        </p>
+        <p className='text-xs text-gray-500'>
           {item.width} x {item.height}
         </p>
       </div>
