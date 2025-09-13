@@ -6,23 +6,28 @@ import HomepageLayout from "../layouts/homepageLayout";
 import Homepage from "../app/homepage/page";
 import AboutUs from "../app/main-about-us/page";
 import ContactWithUs from "../app/contact/page";
+import AvailableBox from "../app/available/page";
 
 const router = createBrowserRouter([
+  // {
+  //   path: "/",
+  //   element: <HomePage />,
+  // },
+  // {
+  //   path: "/design-giftbox",
+  //   element: <DesignGiftBox />,
+  // },
   {
     path: "/",
-    element: <HomePage />,
-  },
-  {
-    path: "/design-giftbox",
-    element: <DesignGiftBox />,
-  },
-  {
-    path: "/home",
     element: <HomepageLayout />,
     children: [
       {
         index: true,
         element: <Homepage />,
+      },
+      {
+        path: "/design-giftbox",
+        element: <DesignGiftBox />,
       },
       {
         path: "about",
@@ -31,6 +36,10 @@ const router = createBrowserRouter([
       {
         path: "contact",
         element: <ContactWithUs />,
+      },
+      {
+        path: "available",
+        element: <AvailableBox />,
       },
     ],
   },
