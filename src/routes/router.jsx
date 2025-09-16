@@ -7,6 +7,8 @@ import Homepage from "../app/homepage/page";
 import AboutUs from "../app/main-about-us/page";
 import ContactWithUs from "../app/contact/page";
 import AvailableBox from "../app/available/page";
+import DesignPreview from "../components/Gift-Preview";
+import OrderSuccess from "../components/order-success";
 
 const router = createBrowserRouter([
   // {
@@ -40,6 +42,14 @@ const router = createBrowserRouter([
       {
         path: "available",
         element: <AvailableBox />,
+      },
+      {
+        path: "preview",
+        element: <DesignPreview />,
+      },
+      {
+        path: "order-success",
+        element: <OrderSuccess />,
       },
     ],
   },
