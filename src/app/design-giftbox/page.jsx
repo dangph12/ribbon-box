@@ -82,7 +82,7 @@ const Page = () => {
   };
 
   return (
-    <div className='h-screen bg-gray-100 overflow-hidden'>
+    <div>
       <DndContext
         onDragStart={handleDragStart}
         onDragMove={handleDragMove}
