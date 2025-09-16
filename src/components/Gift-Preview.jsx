@@ -32,6 +32,16 @@ const DesignPreview = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    const url = "https://script.google.com/macros/s/AKfycbwAOMc5iJOM2dPFBNqcWEvjQ2qWefu4y4o6vHrNCtZ_qMxi6uJmdssq_LWgaa7-o8h6yQ/exec";
+    fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: (`Name=${e.target.name.value}&Address=${e.target.address.value}&Phone=${e.target.phone.value}&PaymentMethod=${e.target.paymentMethod.value}&Note=${e.target.note.value}`),
+    }).then(res => res.text()).then(data => {
+      alert(data)
+    }).catch(err => console.log(err));
+
     console.log("User Info Submitted:", userInfo);
     navigate("/order-success")
   };
