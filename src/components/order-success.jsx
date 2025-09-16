@@ -13,7 +13,7 @@ const OrderSuccessPage = () => {
         </div>
 
         <p className="text-center text-lg text-gray-700 mb-6">
-          Cảm ơn bạn đã mua sắm tại cửa hàng của chúng tôi. Đơn hàng của bạn
+          Cảm ơn bạn đã mua sắm tại Ribbon Box. Đơn hàng của bạn
           đang được xử lý.
         </p>
 
