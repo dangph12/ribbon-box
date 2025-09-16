@@ -1,4 +1,4 @@
-import { useLocation } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { useState } from "react";
 import {
   FaUserAlt,
@@ -7,16 +7,18 @@ import {
   FaCreditCard,
   FaCheckCircle,
 } from "react-icons/fa";
+import logo from "../assets/2.png";
 
 const DesignPreview = () => {
   const location = useLocation();
   const { url } = location.state || {};
+  const navigate = useNavigate()
 
   const [userInfo, setUserInfo] = useState({
     name: "",
     address: "",
     phone: "",
-    paymentMethod: "banking", 
+    paymentMethod: "COD", 
     note: "", 
   });
 
@@ -31,10 +33,19 @@ const DesignPreview = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("User Info Submitted:", userInfo);
+    navigate("/order-success")
   };
 
   if (!url) {
-    return <div>No image found</div>;
+    return (
+      <div>
+        <img
+          src={logo}
+          alt="Gift Box Design"
+          className="w-full max-w-2xl mx-auto shadow-2xl rounded-lg"
+        />
+      </div>
+    );
   }
 
   return (
@@ -43,11 +54,20 @@ const DesignPreview = () => {
         <h1 className="text-3xl font-semibold text-[#C25C61] text-center mb-6">
           Gift Box Design Preview
         </h1>
-        <img
-          src={url}
-          alt="Gift Box Design"
-          className="w-full max-w-2xl mx-auto shadow-2xl rounded-lg"
-        />
+        {url ? (
+          <img
+            src={url}
+            alt="Gift Box Design"
+            className="w-full max-w-2xl mx-auto shadow-2xl rounded-lg"
+            style={{ objectFit: "contain" }}
+          />
+        ) : (
+          <div className="w-full max-w-2xl mx-auto text-center text-gray-400">
+            <div className="bg-gray-200 p-8 rounded-lg">
+              <p className="text-xl text-gray-600">No Image Available</p>
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="w-1/3 bg-white p-6 shadow-xl rounded-lg border border-gray-300">
