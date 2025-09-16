@@ -7,6 +7,7 @@ import Homepage from "../app/homepage/page";
 import AboutUs from "../app/main-about-us/page";
 import ContactWithUs from "../app/contact/page";
 import AvailableBox from "../app/available/page";
+import DesignPreview from "../components/Gift-Preview";
 
 const router = createBrowserRouter([
   // {
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
       {
         path: "available",
         element: <AvailableBox />,
+      },
+      {
+        path: "preview",
+        element: <DesignPreview />,
       },
     ],
   },
