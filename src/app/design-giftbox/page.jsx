@@ -97,8 +97,18 @@ const Page = () => {
             dragPosition={dragPosition}
           />
         </div>
-        <DragOverlay>
-          <DragPreview item={activeItem} gridSize={gridSize} />
+        <DragOverlay
+          adjustScale={false}
+          dropAnimation={{
+            duration: 200,
+            easing: 'cubic-bezier(0.18, 0.67, 0.6, 1.22)'
+          }}
+        >
+          {activeItem && (
+            <div style={{ transform: 'translate(-50%, -50%)' }}>
+              <DragPreview item={activeItem} gridSize={gridSize} />
+            </div>
+          )}
         </DragOverlay>
       </DndContext>
     </div>

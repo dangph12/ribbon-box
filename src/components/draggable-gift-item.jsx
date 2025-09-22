@@ -7,15 +7,9 @@ const DraggableGiftItem = ({ item }) => {
       data: item
     });
 
-  const style = transform
-    ? {
-        transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
-        opacity: isDragging ? 0.5 : 1,
-        position: isDragging ? 'fixed' : 'relative',
-        zIndex: isDragging ? 1000 : 'auto',
-        pointerEvents: isDragging ? 'none' : 'auto'
-      }
-    : undefined;
+  const style = {
+    opacity: isDragging ? 0.7 : 1 // Just fade when dragging, don't move
+  };
 
   return (
     <div
@@ -27,7 +21,7 @@ const DraggableGiftItem = ({ item }) => {
         bg-blue-100 border-2 border-blue-300 rounded-lg p-4 cursor-grab active:cursor-grabbing
         hover:bg-blue-200 transition-colors duration-200
         ${isDragging ? 'ring-2 ring-blue-400 ring-opacity-75' : ''}
-        ${isDragging ? 'w-auto' : 'w-full'}
+        w-full select-none
       `}
     >
       <div className='text-center'>
