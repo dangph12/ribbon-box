@@ -19,14 +19,64 @@ const GiftBoxCanvas = ({ activeItem, dragOverCanvas, dragPosition }) => {
     canvasSize = { width: 800, height: 600 },
     gridSize = 20,
     showGrid = true,
-    selectedItemId = null,
-  } = useSelector((state) => state.giftBox || {});
+    selectedItemId = null
+  } = useSelector(state => state.giftBox || {});
 
   const [dropIndicator, setDropIndicator] = useState({
     isVisible: false,
     position: { x: 0, y: 0 },
-    size: { width: 0, height: 0 }
+    size: { width: 0, height: 0 },
+    isValid: true
   });
+
+  // Helper function to check if position would cause collision
+  const checkPositionValid = (
+    position,
+    draggedItem,
+    canvasItems,
+    canvasSize,
+    gridSize
+  ) => {
+    if (!draggedItem || !position) return true;
+
+    const itemWidth = draggedItem.originalId
+      ? draggedItem.size.width
+      : (draggedItem.width || 4) * gridSize;
+    const itemHeight = draggedItem.originalId
+      ? draggedItem.size.height
+      : (draggedItem.height || 4) * gridSize;
+
+    // Check canvas bounds
+    if (
+      position.x < 0 ||
+      position.y < 0 ||
+      position.x + itemWidth > canvasSize.width ||
+      position.y + itemHeight > canvasSize.height
+    ) {
+      return false;
+    }
+
+    // Check collision with existing items
+    const newLeft = position.x;
+    const newTop = position.y;
+    const newRight = newLeft + itemWidth;
+    const newBottom = newTop + itemHeight;
+
+    return !canvasItems.some(item => {
+      const existingLeft = item.position.x;
+      const existingTop = item.position.y;
+      const existingRight = existingLeft + item.size.width;
+      const existingBottom = existingTop + item.size.height;
+
+      // Check if rectangles overlap
+      return !(
+        newRight <= existingLeft ||
+        newLeft >= existingRight ||
+        newBottom <= existingTop ||
+        newTop >= existingBottom
+      );
+    });
+  };
 
   const { setNodeRef } = useDroppable({
     id: 'canvas'
@@ -38,8 +88,8 @@ const GiftBoxCanvas = ({ activeItem, dragOverCanvas, dragPosition }) => {
     }
   };
 
-  const downloadImage = (blob) => {
-    const link = document.createElement("a");
+  const downloadImage = blob => {
+    const link = document.createElement('a');
     const url = URL.createObjectURL(blob);
     link.href = url;
     link.download = `gift-box-design-${Date.now()}.png`;
@@ -47,7 +97,7 @@ const GiftBoxCanvas = ({ activeItem, dragOverCanvas, dragPosition }) => {
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
-    console.log("📷 Canvas image downloaded successfully!");
+    console.log('📷 Canvas image downloaded successfully!');
   };
 
   const handleSaveDesign = async () => {
@@ -59,9 +109,9 @@ const GiftBoxCanvas = ({ activeItem, dragOverCanvas, dragPosition }) => {
     downloadImage(blob);
 
     const url = URL.createObjectURL(blob);
-    console.log("Navigating to /preview with url:", url);
+    console.log('Navigating to /preview with url:', url);
 
-    navigate("/preview", { state: { url } });
+    navigate('/preview', { state: { url } });
 
     setTimeout(() => {
       dispatch(clearCanvas());
@@ -100,8 +150,8 @@ const GiftBoxCanvas = ({ activeItem, dragOverCanvas, dragPosition }) => {
     }
 
     if (canvasItems && Array.isArray(canvasItems)) {
-      const loadImagePromises = canvasItems.map((item) => {
-        return new Promise((resolve) => {
+      const loadImagePromises = canvasItems.map(item => {
+        return new Promise(resolve => {
           const x = item.position.x;
           const y = item.position.y;
           const width = item.size.width;
@@ -189,8 +239,8 @@ const GiftBoxCanvas = ({ activeItem, dragOverCanvas, dragPosition }) => {
     }
 
     // Download the canvas
-    return new Promise((resolve) =>
-      canvas.toBlob((blob) => resolve(blob), 'image/png')
+    return new Promise(resolve =>
+      canvas.toBlob(blob => resolve(blob), 'image/png')
     );
   };
 
@@ -215,57 +265,73 @@ const GiftBoxCanvas = ({ activeItem, dragOverCanvas, dragPosition }) => {
         Math.min(snappedY, canvasSize.height - itemHeight)
       );
 
+      const finalPosition = { x: constrainedX, y: constrainedY };
+
+      // Check if position is valid (no overlap)
+      const isValidPosition = checkPositionValid(
+        finalPosition,
+        activeItem,
+        canvasItems,
+        canvasSize,
+        gridSize
+      );
+
       setDropIndicator({
         isVisible: true,
-        position: {
-          x: constrainedX,
-          y: constrainedY
-        },
+        position: finalPosition,
         size: { width: itemWidth, height: itemHeight },
+        isValid: isValidPosition
       });
     } else {
-      setDropIndicator((prev) => ({ ...prev, isVisible: false }));
+      setDropIndicator(prev => ({ ...prev, isVisible: false }));
     }
-  }, [dragOverCanvas, activeItem, dragPosition, gridSize, canvasSize]);
+  }, [
+    dragOverCanvas,
+    activeItem,
+    dragPosition,
+    gridSize,
+    canvasSize,
+    canvasItems
+  ]);
 
   return (
-    <div className="flex-1 bg-gray-50 p-6 overflow-auto">
-      <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-xl font-semibold text-gray-800">Gift Box Canvas</h2>
-        <div className="flex items-center space-x-4">
-          <label className="flex items-center space-x-2">
+    <div className='flex-1 bg-gray-50 p-6 overflow-auto'>
+      <div className='mb-4 flex items-center justify-between'>
+        <h2 className='text-xl font-semibold text-gray-800'>Gift Box Canvas</h2>
+        <div className='flex items-center space-x-4'>
+          <label className='flex items-center space-x-2'>
             <input
-              type="checkbox"
+              type='checkbox'
               checked={showGrid}
-              onChange={() => dispatch({ type: "giftBox/toggleGrid" })}
-              className="rounded"
+              onChange={() => dispatch({ type: 'giftBox/toggleGrid' })}
+              className='rounded'
             />
-            <span className="text-sm text-gray-600">Show Grid</span>
+            <span className='text-sm text-gray-600'>Show Grid</span>
           </label>
           <button
             onClick={handleSaveDesign}
-            className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition-colors duration-200"
+            className='px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition-colors duration-200'
           >
             Save Design
           </button>
           <button
             onClick={() => dispatch(clearCanvas())}
-            className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors duration-200"
+            className='px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors duration-200'
           >
             Clear Canvas
           </button>
         </div>
       </div>
 
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 inline-block">
+      <div className='bg-white rounded-lg shadow-sm border border-gray-200 inline-block'>
         <div
           ref={setNodeRef}
-          className="relative bg-white"
+          className='relative bg-white'
           style={{
             width: canvasSize.width,
             height: canvasSize.height,
             minWidth: canvasSize.width,
-            minHeight: canvasSize.height,
+            minHeight: canvasSize.height
           }}
           onClick={handleCanvasClick}
         >
@@ -279,15 +345,16 @@ const GiftBoxCanvas = ({ activeItem, dragOverCanvas, dragPosition }) => {
             position={dropIndicator.position}
             size={dropIndicator.size}
             isVisible={dropIndicator.isVisible && dragOverCanvas}
+            isValid={dropIndicator.isValid}
           />
 
           {canvasItems &&
-            canvasItems.map((item) => <CanvasItem key={item.id} item={item} />)}
+            canvasItems.map(item => <CanvasItem key={item.id} item={item} />)}
 
           {(!canvasItems || canvasItems.length === 0) && (
-            <div className="absolute inset-0 flex items-center justify-center text-gray-400 pointer-events-none">
-              <div className="text-center">
-                <div className="text-lg mb-2">🎁</div>
+            <div className='absolute inset-0 flex items-center justify-center text-gray-400 pointer-events-none'>
+              <div className='text-center'>
+                <div className='text-lg mb-2'>🎁</div>
                 <div>Drag gift items here to design your gift box</div>
               </div>
             </div>
