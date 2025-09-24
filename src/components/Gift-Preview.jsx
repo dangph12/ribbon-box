@@ -33,7 +33,7 @@ const DesignPreview = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const url = "https://script.google.com/macros/s/AKfycbwAOMc5iJOM2dPFBNqcWEvjQ2qWefu4y4o6vHrNCtZ_qMxi6uJmdssq_LWgaa7-o8h6yQ/exec";
+    const url = "https://script.google.com/macros/s/AKfycbwkIN7-7VCuveRzEIAn8lHWPUODfHZZhbfl0mNNH6Cfob9uhB66Ej0OW0GWYEEVl-4mnw/exec";
     fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
