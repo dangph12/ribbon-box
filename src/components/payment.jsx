@@ -29,8 +29,8 @@ const Payment = () => {
           orderCode: orderCode,
           description: `Đơn hàng ${orderCode}`,
           returnUrl: `${baseUrl}/order-success`,
-          cancelUrl: `${baseUrl}/`,
-          signature: generateSignature({ amount: 150000, cancelUrl: `${baseUrl}/`, description: `Đơn hàng ${orderCode}`, orderCode: orderCode, returnUrl: `${baseUrl}/order-success` }),
+          cancelUrl: `${baseUrl}`,
+          signature: generateSignature({ amount: 150000, cancelUrl: `${baseUrl}`, description: `Đơn hàng ${orderCode}`, orderCode: orderCode, returnUrl: `${baseUrl}/order-success` }),
         };
 
         console.log("Payment body:", body);
