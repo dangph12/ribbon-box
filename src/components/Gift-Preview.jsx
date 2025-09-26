@@ -60,7 +60,7 @@ const DesignPreview = () => {
       console.log(data)
     }).catch(err => console.log(err));
 
-    console.log("User Info Submitted:", userInfo);
+    console.log("User Info Submitted:", updatedUserInfo);
     if (e.target.paymentMethod.value === "banking") {
       navigate("/payment", {
         state: { ...updatedUserInfo },
