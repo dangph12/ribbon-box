@@ -12,6 +12,8 @@ const Payment = () => {
   const checksumKey = import.meta.env.VITE_PAYOS_CHECKSUM_KEY;
   const baseUrl = import.meta.env.VITE_BASE_URL || window.location.origin;
 
+  console.log("clientId:", clientId, "apiKey:", apiKey, "checksumKey:", checksumKey, "baseUrl:", baseUrl);
+
   const generateSignature = ({ amount, cancelUrl, description, orderCode, returnUrl }) => {
     const data = `amount=${amount}&cancelUrl=${cancelUrl}&description=${description}&orderCode=${orderCode}&returnUrl=${returnUrl}`;
 
