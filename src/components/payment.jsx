@@ -1,15 +1,16 @@
-import { useLocation } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { useEffect } from "react";
 import CryptoJS from "crypto-js";
 
 const Payment = () => {
+  const navigate = useNavigate();
   const location = useLocation();
   const { orderCode } = location.state || {};
 
   const clientId = import.meta.env.VITE_PAYOS_CLIENT_ID;
   const apiKey = import.meta.env.VITE_PAYOS_API_KEY;
   const checksumKey = import.meta.env.VITE_PAYOS_CHECKSUM_KEY;
-  const baseUrl = 'http://localhost:5173' || 'https://ribbon-box.vercel.app';
+  const baseUrl = import.meta.env.VITE_BASE_URL || window.location.origin;
 
   const generateSignature = ({ amount, cancelUrl, description, orderCode, returnUrl }) => {
     const data = `amount=${amount}&cancelUrl=${cancelUrl}&description=${description}&orderCode=${orderCode}&returnUrl=${returnUrl}`;
@@ -29,7 +30,7 @@ const Payment = () => {
           description: `Đơn hàng ${orderCode}`,
           returnUrl: `${baseUrl}/order-success`,
           cancelUrl: `${baseUrl}/`,
-          signature: generateSignature({amount: 150000, cancelUrl: `${baseUrl}/`, description: `Đơn hàng ${orderCode}`, orderCode: orderCode, returnUrl: `${baseUrl}/order-success`}),
+          signature: generateSignature({ amount: 150000, cancelUrl: `${baseUrl}/`, description: `Đơn hàng ${orderCode}`, orderCode: orderCode, returnUrl: `${baseUrl}/order-success` }),
         };
 
         console.log("Payment body:", body);
@@ -60,6 +61,11 @@ const Payment = () => {
 
     if (orderCode) {
       createPayment();
+    } else {
+      console.error("Order code is missing!");
+      // Chuyển hướng về trang trước hoặc hiển thị thông báo lỗi
+      navigate("/"); // Ví dụ: chuyển hướng về trang chủ
+      return;
     }
   }, [orderCode]);
 
