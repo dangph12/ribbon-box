@@ -9,6 +9,8 @@ import ContactWithUs from "../app/contact/page";
 import AvailableBox from "../app/available/page";
 import DesignPreview from "../components/Gift-Preview";
 import OrderSuccess from "../components/order-success";
+import OrderFailed from "../components/order-failed";
+import Payment from "../components/payment";
 
 const router = createBrowserRouter([
   // {
@@ -50,6 +52,14 @@ const router = createBrowserRouter([
       {
         path: "order-success",
         element: <OrderSuccess />,
+      },
+      {
+        path: "order-failed",
+        element: <OrderFailed />,
+      },
+      {
+        path: "payment",
+        element: <Payment />,
       },
     ],
   },

@@ -56,8 +56,6 @@ const GiftBoxCanvas = ({ activeItem, dragOverCanvas, dragPosition }) => {
     const blob = await generateCanvasImage();
     if (!blob) return;
 
-    downloadImage(blob);
-
     const url = URL.createObjectURL(blob);
     console.log("Navigating to /preview with url:", url);
 
