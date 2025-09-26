@@ -9,6 +9,7 @@ const Payment = () => {
   const clientId = import.meta.env.VITE_PAYOS_CLIENT_ID;
   const apiKey = import.meta.env.VITE_PAYOS_API_KEY;
   const checksumKey = import.meta.env.VITE_PAYOS_CHECKSUM_KEY;
+  const baseUrl = 'http://localhost:5173' || 'https://ribbon-box.vercel.app';
 
   const generateSignature = ({ amount, cancelUrl, description, orderCode, returnUrl }) => {
     const data = `amount=${amount}&cancelUrl=${cancelUrl}&description=${description}&orderCode=${orderCode}&returnUrl=${returnUrl}`;
@@ -26,9 +27,9 @@ const Payment = () => {
           amount: 150000, // Fix cứng tiền, chỉnh sau
           orderCode: orderCode,
           description: `Đơn hàng ${orderCode}`,
-          returnUrl: "http://localhost:5173/order-success",
-          cancelUrl: "http://localhost:5173/",
-          signature: generateSignature({amount: 150000, cancelUrl: "http://localhost:5173/", description: `Đơn hàng ${orderCode}`, orderCode: orderCode, returnUrl: "http://localhost:5173/order-success"}),
+          returnUrl: `${baseUrl}/order-success`,
+          cancelUrl: `${baseUrl}/`,
+          signature: generateSignature({amount: 150000, cancelUrl: `${baseUrl}/`, description: `Đơn hàng ${orderCode}`, orderCode: orderCode, returnUrl: `${baseUrl}/order-success`}),
         };
 
         console.log("Payment body:", body);
