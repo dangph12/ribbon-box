@@ -18,9 +18,20 @@ const DesignPreview = () => {
     name: "",
     address: "",
     phone: "",
-    paymentMethod: "COD", 
-    note: "", 
+    orderCode: "",
+    paymentMethod: "cod",
+    note: "",
   });
+
+  const generateCode = () => {
+    const chars = '0123456789';
+    let result = '';
+    for (let i = 0; i < 5; i++) {
+      const randomIndex = Math.floor(Math.random() * chars.length);
+      result += chars[randomIndex];
+    }
+    return parseInt(result, 10);
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -33,17 +44,31 @@ const DesignPreview = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    let orderCode = generateCode();
+
+    const updatedUserInfo = {
+      ...userInfo,
+      orderCode: orderCode,
+    };
+    setUserInfo(updatedUserInfo);
+
     const url = "https://script.google.com/macros/s/AKfycbwkIN7-7VCuveRzEIAn8lHWPUODfHZZhbfl0mNNH6Cfob9uhB66Ej0OW0GWYEEVl-4mnw/exec";
     fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: (`Name=${e.target.name.value}&Address=${e.target.address.value}&Phone=${e.target.phone.value}&PaymentMethod=${e.target.paymentMethod.value}&Note=${e.target.note.value}`),
+      body: (`Name=${e.target.name.value}&Address=${e.target.address.value}&Phone=${e.target.phone.value}&OrderCode=${orderCode}&PaymentMethod=${e.target.paymentMethod.value}&Note=${e.target.note.value}`),
     }).then(res => res.text()).then(data => {
-      alert(data)
+      console.log(data)
     }).catch(err => console.log(err));
 
     console.log("User Info Submitted:", userInfo);
-    navigate("/order-success")
+    if (e.target.paymentMethod.value === "banking") {
+      navigate("/payment", {
+        state: { ...updatedUserInfo },
+      });
+    } else {
+      navigate("/order-success")
+    }
   };
 
   if (!url) {
