@@ -50,7 +50,6 @@ const DesignPreview = () => {
       ...userInfo,
       orderCode: orderCode,
     };
-    setUserInfo(updatedUserInfo);
 
     const url = "https://script.google.com/macros/s/AKfycbwkIN7-7VCuveRzEIAn8lHWPUODfHZZhbfl0mNNH6Cfob9uhB66Ej0OW0GWYEEVl-4mnw/exec";
     fetch(url, {
