@@ -23,15 +23,9 @@ const DesignPreview = () => {
     note: "",
   });
 
-  const generateCode = () => {
-    const chars = '0123456789';
-    let result = '';
-    for (let i = 0; i < 5; i++) {
-      const randomIndex = Math.floor(Math.random() * chars.length);
-      result += chars[randomIndex];
-    }
-    return parseInt(result, 10);
-  };
+  const generateRandom5Digit = () => {
+    return Math.floor(10000 + Math.random() * 90000);
+  }
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -44,7 +38,7 @@ const DesignPreview = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    let orderCode = generateCode();
+    let orderCode = generateRandom5Digit();
 
     const updatedUserInfo = {
       ...userInfo,
