@@ -12,8 +12,6 @@ const Payment = () => {
   const checksumKey = import.meta.env.VITE_PAYOS_CHECKSUM_KEY;
   const baseUrl = import.meta.env.VITE_BASE_URL || window.location.origin;
 
-  console.log("clientId:", clientId, "apiKey:", apiKey, "checksumKey:", checksumKey, "baseUrl:", baseUrl);
-
   const generateSignature = ({ amount, cancelUrl, description, orderCode, returnUrl }) => {
     const data = `amount=${amount}&cancelUrl=${cancelUrl}&description=${description}&orderCode=${orderCode}&returnUrl=${returnUrl}`;
 
@@ -35,8 +33,6 @@ const Payment = () => {
           signature: generateSignature({ amount: 150000, cancelUrl: `${baseUrl}`, description: `Đơn hàng ${orderCode}`, orderCode: orderCode, returnUrl: `${baseUrl}/order-success` }),
         };
 
-        console.log("Payment body:", body);
-
         const res = await fetch("https://api-merchant.payos.vn/v2/payment-requests", {
           method: "POST",
           headers: {
@@ -49,6 +45,7 @@ const Payment = () => {
 
         const data = await res.json();
         console.log("PayOS response:", data);
+        console.log("clientId:", clientId, "apiKey:", apiKey, "checksumKey:", checksumKey, "baseUrl:", baseUrl);
 
         if (data.data.checkoutUrl) {
           window.location.href = data.data.checkoutUrl;
