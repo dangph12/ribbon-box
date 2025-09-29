@@ -5,6 +5,7 @@ import { FiUser, FiShoppingCart, FiChevronDown } from "react-icons/fi";
 
 function Header() {
   const [showDropdown, setShowDropdown] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navItems = [
     { to: "/", label: "Trang Chủ" },
@@ -18,7 +19,7 @@ function Header() {
     { to: "/service/option1", label: "Quà 8-4" },
     { to: "/service/option2", label: "Quà Sinh Nhật" },
     { to: "/service/option3", label: "Quà Kỉ Niệm" },
-    { to: "/service/option3", label: "Quà Cưới" },
+    { to: "/service/option4", label: "Quà Cưới" },
   ];
 
   return (
@@ -49,11 +50,61 @@ function Header() {
             </Link>
           </div>
 
+          <button
+            className="md:hidden text-[#AD3542] hover:text-red-600 text-4xl"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          >
+            <FiChevronDown />
+          </button>
+
+          {mobileMenuOpen && (
+            <div className="md:hidden w-full bg-[#FFFDF1] p-4 mt-2 rounded-lg shadow-lg">
+              <ul className="flex flex-col space-y-2">
+                {navItems.map(({ to, label }) => (
+                  <li key={to}>
+                    <Link
+                      to={to}
+                      className="block text-[#AD3542] hover:text-[#C25C61] text-lg"
+                    >
+                      {label}
+                    </Link>
+                  </li>
+                ))}
+                <li className="relative">
+                  <button
+                    onClick={() => setShowDropdown(!showDropdown)}
+                    className="flex items-center gap-1 py-2 text-[#AD3542] hover:text-[#C25C61] text-lg"
+                  >
+                    Dịch Vụ <FiChevronDown className="mt-[2px]" />
+                  </button>
+
+                  {showDropdown && (
+                    <div className="absolute z-10 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200">
+                      <ul className="py-5 text-sm text-gray-700">
+                        {serviceItems.map(({ to, label }) => (
+                          <li key={to}>
+                            <Link
+                              to={to}
+                              className="block px-4 py-2 hover:bg-gray-100"
+                              onClick={() => setShowDropdown(false)}
+                            >
+                              {label}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </li>
+              </ul>
+            </div>
+          )}
+
           <div
-            className="hidden w-full md:flex md:w-auto md:order-1"
+            className="hidden md:flex md:w-auto md:order-1"
             id="navbar-default"
           >
-            <ul className="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-[#FFFDF1] md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-[#FFFDF1]">
+            <ul className="flex font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-[#FFFDF1] md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-[#FFFDF1]">
               {navItems.map(({ to, label }) => (
                 <li key={to}>
                   <Link
