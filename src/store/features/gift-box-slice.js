@@ -6,7 +6,6 @@ const CANVAS_HEIGHT = 440;
 
 const snapToGrid = (value, gridSize) => Math.round(value / gridSize) * gridSize;
 
-// Helper function to check if two items would overlap
 const checkCollision = (newItem, existingItems, gridSize) => {
   const newLeft = newItem.position.x;
   const newTop = newItem.position.y;
@@ -14,14 +13,13 @@ const checkCollision = (newItem, existingItems, gridSize) => {
   const newBottom = newTop + newItem.height * gridSize;
 
   return existingItems.some(item => {
-    if (item.id === newItem.id) return false; // Don't check against itself
+    if (item.id === newItem.id) return false;
 
     const existingLeft = item.position.x;
     const existingTop = item.position.y;
     const existingRight = existingLeft + item.size.width;
     const existingBottom = existingTop + item.size.height;
 
-    // Check if rectangles overlap
     return !(
       newRight <= existingLeft ||
       newLeft >= existingRight ||
@@ -31,7 +29,6 @@ const checkCollision = (newItem, existingItems, gridSize) => {
   });
 };
 
-// Helper function to find nearest available position
 const findNearestAvailablePosition = (
   item,
   position,
@@ -42,14 +39,11 @@ const findNearestAvailablePosition = (
   const itemWidth = item.width * gridSize;
   const itemHeight = item.height * gridSize;
 
-  // Start from the desired position and spiral outward
   let testPosition = { ...position };
 
-  // Snap to grid first
   testPosition.x = snapToGrid(testPosition.x, gridSize);
   testPosition.y = snapToGrid(testPosition.y, gridSize);
 
-  // Check if current position is valid
   const testItem = { ...item, position: testPosition };
 
   if (
@@ -62,11 +56,9 @@ const findNearestAvailablePosition = (
     return testPosition;
   }
 
-  // If not valid, search for nearest available position
   const maxDistance = Math.max(canvasSize.width, canvasSize.height);
 
   for (let distance = gridSize; distance < maxDistance; distance += gridSize) {
-    // Try positions in a spiral pattern
     for (let angle = 0; angle < 360; angle += 45) {
       const radians = (angle * Math.PI) / 180;
       const offsetX =
@@ -79,7 +71,6 @@ const findNearestAvailablePosition = (
         y: snapToGrid(position.y + offsetY, gridSize)
       };
 
-      // Check bounds
       if (
         candidatePosition.x < 0 ||
         candidatePosition.y < 0 ||
@@ -97,7 +88,6 @@ const findNearestAvailablePosition = (
     }
   }
 
-  // If no position found, return original position (this shouldn't happen often)
   return testPosition;
 };
 
@@ -129,20 +119,28 @@ const giftBoxSlice = createSlice({
         y: snapToGrid(position.y, state.gridSize)
       };
 
-      // Find available position to prevent overlap
-      const availablePosition = findNearestAvailablePosition(
-        item,
-        snappedPosition,
-        state.canvasItems,
-        state.canvasSize,
-        state.gridSize
-      );
+      const itemWidth = item.width * state.gridSize;
+      const itemHeight = item.height * state.gridSize;
+
+      if (
+        snappedPosition.x < 0 ||
+        snappedPosition.y < 0 ||
+        snappedPosition.x + itemWidth > state.canvasSize.width ||
+        snappedPosition.y + itemHeight > state.canvasSize.height
+      ) {
+        return;
+      }
+
+      const testItem = { ...item, position: snappedPosition };
+      if (checkCollision(testItem, state.canvasItems, state.gridSize)) {
+        return;
+      }
 
       const newItem = {
         ...item,
-        id: `canvas-${item.id}-${Date.now()}`, // Unique ID for canvas item
+        id: `canvas-${item.id}-${Date.now()}`,
         originalId: item.id,
-        position: availablePosition,
+        position: snappedPosition,
         price: item.price || 0,
         size: {
           width: item.width * state.gridSize,
@@ -163,7 +161,6 @@ const giftBoxSlice = createSlice({
           y: snapToGrid(position.y, state.gridSize)
         };
 
-        // Create a temporary item for collision checking (excluding itself)
         const tempItem = {
           ...item,
           position: snappedPosition,
@@ -172,7 +169,6 @@ const giftBoxSlice = createSlice({
         };
         const otherItems = state.canvasItems.filter(i => i.id !== itemId);
 
-        // Find available position to prevent overlap
         const availablePosition = findNearestAvailablePosition(
           tempItem,
           snappedPosition,
@@ -181,7 +177,6 @@ const giftBoxSlice = createSlice({
           state.gridSize
         );
 
-        // Ensure the position is within canvas bounds
         item.position = {
           x: Math.max(
             0,
@@ -207,7 +202,6 @@ const giftBoxSlice = createSlice({
 
       state.canvasItems = state.canvasItems.filter(item => item.id !== itemId);
 
-      // Decrease total price
       if (itemToRemove) {
         state.totalPrice -= itemToRemove.price || 0;
       }

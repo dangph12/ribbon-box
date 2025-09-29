@@ -30,7 +30,6 @@ const GiftBoxCanvas = ({ activeItem, dragOverCanvas, dragPosition }) => {
     isValid: true
   });
 
-  // Helper function to check if position would cause collision
   const checkPositionValid = (
     position,
     draggedItem,
@@ -47,7 +46,6 @@ const GiftBoxCanvas = ({ activeItem, dragOverCanvas, dragPosition }) => {
       ? draggedItem.size.height
       : (draggedItem.height || 4) * gridSize;
 
-    // Check canvas bounds
     if (
       position.x < 0 ||
       position.y < 0 ||
@@ -57,7 +55,6 @@ const GiftBoxCanvas = ({ activeItem, dragOverCanvas, dragPosition }) => {
       return false;
     }
 
-    // Check collision with existing items
     const newLeft = position.x;
     const newTop = position.y;
     const newRight = newLeft + itemWidth;
@@ -69,7 +66,6 @@ const GiftBoxCanvas = ({ activeItem, dragOverCanvas, dragPosition }) => {
       const existingRight = existingLeft + item.size.width;
       const existingBottom = existingTop + item.size.height;
 
-      // Check if rectangles overlap
       return !(
         newRight <= existingLeft ||
         newLeft >= existingRight ||
@@ -87,18 +83,6 @@ const GiftBoxCanvas = ({ activeItem, dragOverCanvas, dragPosition }) => {
     if (selectedItemId) {
       dispatch(deselectItem());
     }
-  };
-
-  const downloadImage = blob => {
-    const link = document.createElement('a');
-    const url = URL.createObjectURL(blob);
-    link.href = url;
-    link.download = `gift-box-design-${Date.now()}.png`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-    console.log('📷 Canvas image downloaded successfully!');
   };
 
   const handleSaveDesign = async () => {
@@ -185,9 +169,8 @@ const GiftBoxCanvas = ({ activeItem, dragOverCanvas, dragPosition }) => {
             img.src = item.image;
 
             function drawFallbackBackground() {
-              // Draw gray background for fallback
-              ctx.fillStyle = '#e5e7eb'; // gray-200
-              ctx.strokeStyle = '#d1d5db'; // gray-300
+              ctx.fillStyle = '#e5e7eb';
+              ctx.strokeStyle = '#d1d5db';
               ctx.lineWidth = 2;
 
               const radius = 8;
@@ -196,8 +179,7 @@ const GiftBoxCanvas = ({ activeItem, dragOverCanvas, dragPosition }) => {
               ctx.fill();
               ctx.stroke();
 
-              // Draw text
-              ctx.fillStyle = '#374151'; // gray-700
+              ctx.fillStyle = '#374151';
               ctx.font = 'bold 16px Arial';
               ctx.textAlign = 'center';
               ctx.textBaseline = 'middle';
@@ -208,9 +190,8 @@ const GiftBoxCanvas = ({ activeItem, dragOverCanvas, dragPosition }) => {
               );
             }
           } else {
-            // No image, draw gray background with text
-            ctx.fillStyle = '#e5e7eb'; // gray-200
-            ctx.strokeStyle = '#d1d5db'; // gray-300
+            ctx.fillStyle = '#e5e7eb'; 
+            ctx.strokeStyle = '#d1d5db'; 
             ctx.lineWidth = 2;
 
             const radius = 8;
@@ -219,7 +200,7 @@ const GiftBoxCanvas = ({ activeItem, dragOverCanvas, dragPosition }) => {
             ctx.fill();
             ctx.stroke();
 
-            ctx.fillStyle = '#374151'; // gray-700
+            ctx.fillStyle = '#374151';
             ctx.font = 'bold 16px Arial';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
@@ -233,11 +214,9 @@ const GiftBoxCanvas = ({ activeItem, dragOverCanvas, dragPosition }) => {
         });
       });
 
-      // Wait for all images to load before generating the final image
       await Promise.all(loadImagePromises);
     }
 
-    // Download the canvas
     return new Promise(resolve =>
       canvas.toBlob(blob => resolve(blob), 'image/png')
     );
@@ -266,7 +245,6 @@ const GiftBoxCanvas = ({ activeItem, dragOverCanvas, dragPosition }) => {
 
       const finalPosition = { x: constrainedX, y: constrainedY };
 
-      // Check if position is valid (no overlap)
       const isValidPosition = checkPositionValid(
         finalPosition,
         activeItem,
