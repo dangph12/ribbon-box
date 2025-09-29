@@ -3,12 +3,15 @@ import ItemImage from './item-image';
 const DragPreview = ({ item, gridSize }) => {
   if (!item) return null;
 
+  const width = item.width * gridSize;
+  const height = item.height * gridSize;
+
   return (
     <div
       className='bg-blue-200 border-2 border-blue-400 rounded-lg opacity-90 flex items-center justify-center shadow-lg overflow-hidden'
       style={{
-        width: '80px',
-        height: '80px',
+        width: width,
+        height: height,
         pointerEvents: 'none'
       }}
     >

@@ -82,7 +82,7 @@ const Page = () => {
   };
 
   return (
-    <div>
+    <div className='h-screen flex flex-col'>
       <DndContext
         onDragStart={handleDragStart}
         onDragMove={handleDragMove}
@@ -105,7 +105,13 @@ const Page = () => {
           }}
         >
           {activeItem && (
-            <div style={{ transform: 'translate(-50%, -50%)' }}>
+            <div
+              style={{
+                transform: `translate(-${
+                  (activeItem.width * gridSize) / 2
+                }px, -${(activeItem.height * gridSize) / 2}px)`
+              }}
+            >
               <DragPreview item={activeItem} gridSize={gridSize} />
             </div>
           )}

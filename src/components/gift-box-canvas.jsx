@@ -295,8 +295,8 @@ const GiftBoxCanvas = ({ activeItem, dragOverCanvas, dragPosition }) => {
   ]);
 
   return (
-    <div className='flex-1 bg-gray-50 p-6 overflow-auto'>
-      <div className='mb-4 flex items-center justify-between'>
+    <div className='flex-1 bg-gray-50 p-2'>
+      <div className='mb-2 flex items-center justify-between'>
         <h2 className='text-xl font-semibold text-gray-800'>Gift Box Canvas</h2>
         <div className='flex items-center space-x-4'>
           <label className='flex items-center space-x-2'>
@@ -306,24 +306,24 @@ const GiftBoxCanvas = ({ activeItem, dragOverCanvas, dragPosition }) => {
               onChange={() => dispatch({ type: 'giftBox/toggleGrid' })}
               className='rounded'
             />
-            <span className='text-sm text-gray-600'>Show Grid</span>
+            <span className='text-sm text-gray-600'>Hiện lưới</span>
           </label>
           <button
             onClick={handleSaveDesign}
             className='px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition-colors duration-200'
           >
-            Save Design
+            Thanh toán
           </button>
           <button
             onClick={() => dispatch(clearCanvas())}
             className='px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors duration-200'
           >
-            Clear Canvas
+            Xoá hết quà
           </button>
         </div>
       </div>
 
-      <div className='bg-white rounded-lg shadow-sm border border-gray-200 inline-block'>
+      <div className='bg-white rounded-lg shadow-sm border border-gray-200 inline-block max-w-full'>
         <div
           ref={setNodeRef}
           className='relative bg-white'
@@ -355,7 +355,7 @@ const GiftBoxCanvas = ({ activeItem, dragOverCanvas, dragPosition }) => {
             <div className='absolute inset-0 flex items-center justify-center text-gray-400 pointer-events-none'>
               <div className='text-center'>
                 <div className='text-lg mb-2'>🎁</div>
-                <div>Drag gift items here to design your gift box</div>
+                <div>Kéo thả món quà vào đây</div>
               </div>
             </div>
           )}

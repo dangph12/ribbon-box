@@ -8,7 +8,7 @@ const DraggableGiftItem = ({ item }) => {
     });
 
   const style = {
-    opacity: isDragging ? 0.7 : 1 // Just fade when dragging, don't move
+    opacity: isDragging ? 0.7 : 1
   };
 
   return (

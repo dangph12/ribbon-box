@@ -1,8 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const GRID_SIZE = 20; // Grid size in pixels
-const CANVAS_WIDTH = 800;
-const CANVAS_HEIGHT = 600;
+const GRID_SIZE = 20;
+const CANVAS_WIDTH = 440;
+const CANVAS_HEIGHT = 440;
 
 const snapToGrid = (value, gridSize) => Math.round(value / gridSize) * gridSize;
 
