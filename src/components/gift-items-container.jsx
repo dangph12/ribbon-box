@@ -34,7 +34,7 @@ const GiftItemsContainer = () => {
         ))}
       </div>
       <div className='mt-6 text-xs text-gray-500 flex-shrink-0'>
-        <p>Drag items to the canvas to design your gift box</p>
+        <p>Kéo món quà vào hộp</p>
       </div>
     </div>
   );
