@@ -104,6 +104,7 @@ const findNearestAvailablePosition = (
 const initialState = {
   canvasItems: [],
   selectedItemId: null,
+  totalPrice: 0,
   canvasSize: {
     width: CANVAS_WIDTH,
     height: CANVAS_HEIGHT
@@ -142,6 +143,7 @@ const giftBoxSlice = createSlice({
         id: `canvas-${item.id}-${Date.now()}`, // Unique ID for canvas item
         originalId: item.id,
         position: availablePosition,
+        price: item.price || 0,
         size: {
           width: item.width * state.gridSize,
           height: item.height * state.gridSize
@@ -149,6 +151,7 @@ const giftBoxSlice = createSlice({
       };
 
       state.canvasItems.push(newItem);
+      state.totalPrice += item.price || 0;
     },
 
     moveItemOnCanvas: (state, action) => {
@@ -200,7 +203,15 @@ const giftBoxSlice = createSlice({
 
     removeItemFromCanvas: (state, action) => {
       const itemId = action.payload;
+      const itemToRemove = state.canvasItems.find(item => item.id === itemId);
+
       state.canvasItems = state.canvasItems.filter(item => item.id !== itemId);
+
+      // Decrease total price
+      if (itemToRemove) {
+        state.totalPrice -= itemToRemove.price || 0;
+      }
+
       if (state.selectedItemId === itemId) {
         state.selectedItemId = null;
       }
@@ -233,6 +244,7 @@ const giftBoxSlice = createSlice({
     clearCanvas: state => {
       state.canvasItems = [];
       state.selectedItemId = null;
+      state.totalPrice = 0;
     },
 
     resizeItem: (state, action) => {

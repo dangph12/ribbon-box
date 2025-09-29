@@ -19,7 +19,8 @@ const GiftBoxCanvas = ({ activeItem, dragOverCanvas, dragPosition }) => {
     canvasSize = { width: 800, height: 600 },
     gridSize = 20,
     showGrid = true,
-    selectedItemId = null
+    selectedItemId = null,
+    totalPrice = 0
   } = useSelector(state => state.giftBox || {});
 
   const [dropIndicator, setDropIndicator] = useState({
@@ -296,9 +297,11 @@ const GiftBoxCanvas = ({ activeItem, dragOverCanvas, dragPosition }) => {
 
   return (
     <div className='flex-1 bg-gray-50 p-2 w-full'>
-      <div className='mb-2 flex items-center justify-between'>
-        <h2 className='text-xl font-semibold text-gray-800'>Gift Box Canvas</h2>
-        <div className='flex items-center space-x-4'>
+      <div className='mb-10 flex items-center justify-between px-4'>
+        <h2 className='text-xl font-semibold text-gray-800 pr-8'>
+          Tổng tiền: {totalPrice.toLocaleString('vi-VN')} VNĐ
+        </h2>
+        <div className='flex items-center space-x-6'>
           <label className='flex items-center space-x-2'>
             <input
               type='checkbox'
@@ -326,7 +329,7 @@ const GiftBoxCanvas = ({ activeItem, dragOverCanvas, dragPosition }) => {
       <div className='w-full flex justify-center px-4'>
         <div
           ref={setNodeRef}
-          className='relative bg-white border border-gray-300'
+          className='relative bg-white border border-gray-300 rounded-xl'
           style={{
             width: canvasSize.width,
             height: canvasSize.height,
