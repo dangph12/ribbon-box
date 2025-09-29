@@ -3,48 +3,48 @@
     "id": "item-1",
     "width": 8,
     "height": 8,
-    "image": "https://cdn.pixabay.com/photo/2017/01/31/09/30/coffee-2023323_960_720.png",
+    "image": "https://res.cloudinary.com/djpv3n1e2/image/upload/v1759142052/c%E1%BB%91c_nh%E1%BB%8F_ggramm.png",
     "name": "Cốc nhỏ",
-    "price": 100000
+    "price": 60000
   },
   {
     "id": "item-2",
     "width": 10,
     "height": 7,
-    "image": "https://cdn.pixabay.com/photo/2013/07/12/18/20/shoes-153310_960_720.png",
+    "image": "https://res.cloudinary.com/djpv3n1e2/image/upload/v1759142052/thi%E1%BB%87p_swjp1k.png",
     "name": "Thiệp",
-    "price": 100000
+    "price": 20000
   },
   {
     "id": "item-3",
-    "width": 5,
-    "height": 7,
-    "image": "https://cdn.pixabay.com/photo/2014/04/03/10/03/book-311116_960_720.png",
-    "name": "Nến",
-    "price": 100000
+    "width": 7,
+    "height": 6,
+    "image": "https://res.cloudinary.com/djpv3n1e2/image/upload/v1759142054/n%E1%BA%BFn_th%C6%A1m_poc0c2.png",
+    "name": "Nến thơm",
+    "price": 30000
   },
   {
     "id": "item-4",
     "width": 11,
     "height": 10,
-    "image": "https://cdn.pixabay.com/photo/2017/01/31/15/31/iphone-2024166_960_720.png",
+    "image": "https://res.cloudinary.com/djpv3n1e2/image/upload/v1759142052/c%E1%BB%91c_to_uibobm.png",
     "name": "Cốc to",
-    "price": 100000
+    "price": 80000
   },
   {
     "id": "item-5",
     "width": 8,
     "height": 8,
-    "image": "https://cdn.pixabay.com/photo/2017/01/31/15/31/iphone-2024166_960_720.png",
+    "image": "https://res.cloudinary.com/djpv3n1e2/image/upload/v1759142052/h%E1%BB%99p_tr%C3%A0_ye51br.png",
     "name": "Hộp trà",
-    "price": 100000
+    "price": 80000
   },
   {
     "id": "item-6",
-    "width": 14,
-    "height": 14,
-    "image": "https://cdn.pixabay.com/photo/2017/01/31/15/31/iphone-2024166_960_720.png",
+    "width": 7,
+    "height": 10,
+    "image": "https://res.cloudinary.com/djpv3n1e2/image/upload/v1759142052/kh%C4%83n_tay_rze2lp.png",
     "name": "Khăn tay",
-    "price": 100000
+    "price": 70000
   }
 ]
