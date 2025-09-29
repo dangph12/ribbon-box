@@ -1,30 +1,50 @@
 [
   {
     "id": "item-1",
-    "width": 4,
-    "height": 4,
+    "width": 8,
+    "height": 8,
     "image": "https://cdn.pixabay.com/photo/2017/01/31/09/30/coffee-2023323_960_720.png",
-    "name": "Cup"
+    "name": "Cốc nhỏ",
+    "price": 100000
   },
   {
     "id": "item-2",
-    "width": 4,
-    "height": 4,
+    "width": 10,
+    "height": 7,
     "image": "https://cdn.pixabay.com/photo/2013/07/12/18/20/shoes-153310_960_720.png",
-    "name": "Sneakers"
+    "name": "Thiệp",
+    "price": 100000
   },
   {
     "id": "item-3",
-    "width": 4,
-    "height": 4,
+    "width": 5,
+    "height": 7,
     "image": "https://cdn.pixabay.com/photo/2014/04/03/10/03/book-311116_960_720.png",
-    "name": "Book"
+    "name": "Nến",
+    "price": 100000
   },
   {
     "id": "item-4",
-    "width": 4,
-    "height": 4,
+    "width": 11,
+    "height": 10,
     "image": "https://cdn.pixabay.com/photo/2017/01/31/15/31/iphone-2024166_960_720.png",
-    "name": "Phone"
+    "name": "Cốc to",
+    "price": 100000
+  },
+  {
+    "id": "item-5",
+    "width": 8,
+    "height": 8,
+    "image": "https://cdn.pixabay.com/photo/2017/01/31/15/31/iphone-2024166_960_720.png",
+    "name": "Hộp trà",
+    "price": 100000
+  },
+  {
+    "id": "item-6",
+    "width": 14,
+    "height": 14,
+    "image": "https://cdn.pixabay.com/photo/2017/01/31/15/31/iphone-2024166_960_720.png",
+    "name": "Khăn tay",
+    "price": 100000
   }
 ]

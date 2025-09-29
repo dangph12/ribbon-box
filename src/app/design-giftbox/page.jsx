@@ -82,7 +82,7 @@ const Page = () => {
   };
 
   return (
-    <div>
+    <div className='h-screen flex flex-col'>
       <DndContext
         onDragStart={handleDragStart}
         onDragMove={handleDragMove}
@@ -97,8 +97,24 @@ const Page = () => {
             dragPosition={dragPosition}
           />
         </div>
-        <DragOverlay>
-          <DragPreview item={activeItem} gridSize={gridSize} />
+        <DragOverlay
+          adjustScale={false}
+          dropAnimation={{
+            duration: 200,
+            easing: 'cubic-bezier(0.18, 0.67, 0.6, 1.22)'
+          }}
+        >
+          {activeItem && (
+            <div
+              style={{
+                transform: `translate(-${
+                  (activeItem.width * gridSize) / 2
+                }px, -${(activeItem.height * gridSize) / 2}px)`
+              }}
+            >
+              <DragPreview item={activeItem} gridSize={gridSize} />
+            </div>
+          )}
         </DragOverlay>
       </DndContext>
     </div>
