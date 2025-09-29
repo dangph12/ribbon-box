@@ -7,7 +7,7 @@ const GiftItemsContainer = () => {
   if (loading) {
     return (
       <div className='w-64 bg-white border-r border-gray-200 p-4'>
-        <h3 className='text-lg font-semibold mb-4'>Gift Items</h3>
+        <h3 className='text-lg font-semibold mb-4'>Món quà</h3>
         <div className='text-gray-500'>Loading...</div>
       </div>
     );
@@ -16,7 +16,7 @@ const GiftItemsContainer = () => {
   if (error) {
     return (
       <div className='w-64 bg-white border-r border-gray-200 p-4'>
-        <h3 className='text-lg font-semibold mb-4'>Gift Items</h3>
+        <h3 className='text-lg font-semibold mb-4'>Món quà</h3>
         <div className='text-red-500'>Error: {error}</div>
       </div>
     );
@@ -24,7 +24,7 @@ const GiftItemsContainer = () => {
 
   return (
     <div className='w-64 min-w-64 max-w-64 bg-white border-r border-gray-200 p-4 flex-shrink-0 flex flex-col h-full'>
-      <h3 className='text-lg font-semibold mb-4 text-gray-800'>Gift Items</h3>
+      <h3 className='text-lg font-semibold mb-4 text-gray-800'>Món quà</h3>
       <div
         className='overflow-y-auto overflow-x-hidden space-y-3'
         style={{ height: 'calc(100vh - 180px)' }}

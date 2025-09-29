@@ -295,7 +295,7 @@ const GiftBoxCanvas = ({ activeItem, dragOverCanvas, dragPosition }) => {
   ]);
 
   return (
-    <div className='flex-1 bg-gray-50 p-2'>
+    <div className='flex-1 bg-gray-50 p-2 w-full'>
       <div className='mb-2 flex items-center justify-between'>
         <h2 className='text-xl font-semibold text-gray-800'>Gift Box Canvas</h2>
         <div className='flex items-center space-x-4'>
@@ -323,10 +323,10 @@ const GiftBoxCanvas = ({ activeItem, dragOverCanvas, dragPosition }) => {
         </div>
       </div>
 
-      <div className='bg-white rounded-lg shadow-sm border border-gray-200 inline-block max-w-full'>
+      <div className='w-full flex justify-center px-4'>
         <div
           ref={setNodeRef}
-          className='relative bg-white'
+          className='relative bg-white border border-gray-300'
           style={{
             width: canvasSize.width,
             height: canvasSize.height,
