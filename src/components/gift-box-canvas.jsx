@@ -94,7 +94,9 @@ const GiftBoxCanvas = ({ activeItem, dragOverCanvas, dragPosition }) => {
     const url = URL.createObjectURL(blob);
     console.log('Navigating to /preview with url:', url);
 
-    navigate('/preview', { state: { url } });
+    const name = "Hộp quà tự thiết kế";
+
+    navigate('/preview', { state: { name, url, totalPrice } });
 
     setTimeout(() => {
       dispatch(clearCanvas());
