@@ -46,5 +46,13 @@
     "image": "https://res.cloudinary.com/djpv3n1e2/image/upload/v1759142052/kh%C4%83n_tay_rze2lp.png",
     "name": "Khăn tay",
     "price": 70000
+  },
+  {
+    "id": "item-7",
+    "width": 9,
+    "height": 5,
+    "image": "https://res.cloudinary.com/djpv3n1e2/image/upload/v1759222674/x%C3%A0_ph%C3%B2ng_n25ru5.png",
+    "name": "Xà phòng",
+    "price": 70000
   }
 ]
