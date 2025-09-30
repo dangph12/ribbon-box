@@ -5,7 +5,7 @@ import CryptoJS from 'crypto-js';
 const Payment = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { orderCode } = location.state || {};
+  const { orderCode, price } = location.state || {};
 
   const clientId = import.meta.env.VITE_PAYOS_CLIENT_ID;
   const apiKey = import.meta.env.VITE_PAYOS_API_KEY;
@@ -32,13 +32,13 @@ const Payment = () => {
     const createPayment = async () => {
       try {
         const body = {
-          amount: 150000, // Fix cứng tiền, chỉnh sau
+          amount: price,
           orderCode: orderCode,
           description: `Đơn hàng ${orderCode}`,
           returnUrl: `${baseUrl}/order-success`,
           cancelUrl: `${baseUrl}`,
           signature: generateSignature({
-            amount: 150000,
+            amount: price,
             cancelUrl: `${baseUrl}`,
             description: `Đơn hàng ${orderCode}`,
             orderCode: orderCode,
@@ -60,17 +60,6 @@ const Payment = () => {
         );
 
         const data = await res.json();
-        console.log('PayOS response:', data);
-        console.log(
-          'clientId:',
-          clientId,
-          'apiKey:',
-          apiKey,
-          'checksumKey:',
-          checksumKey,
-          'baseUrl:',
-          baseUrl
-        );
 
         if (data.data.checkoutUrl) {
           window.location.href = data.data.checkoutUrl;
