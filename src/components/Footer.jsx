@@ -3,26 +3,18 @@ import { Link } from "react-router";
 
 const footerItems = [
   {
-    title: "Resources",
+    title: "Theo dõi chúng tôi",
     links: [
-      { label: "Flowbite", href: "https://flowbite.com/" },
-      { label: "Tailwind CSS", href: "https://tailwindcss.com/" },
+      { label: "Facebook", href: "https://www.facebook.com/profile.php?id=61580628163581" },
+      { label: "Tiktok", href: "https://www.tiktok.com/@ribbon.box5" },
     ],
     type: "external",
   },
   {
-    title: "Follow us",
+    title: "Điều hướng",
     links: [
-      { label: "Github", href: "https://github.com/themesberg/flowbite" },
-      { label: "Discord", href: "https://discord.gg/4eeurUVvTy" },
-    ],
-    type: "external",
-  },
-  {
-    title: "Legal",
-    links: [
-      { label: "Privacy Policy", href: "#" },
-      { label: "Terms & Conditions", href: "#" },
+      { label: "Chính sách bảo mật", href: "#" },
+      { label: "Điều khoản & Điều kiện", href: "#" },
     ],
     type: "external",
   },
@@ -85,9 +77,9 @@ function Footer() {
             <span className="text-sm text-[#AD3542] sm:text-center">
               © 2025{" "}
               <a href="/" className="hover:text-[#C25C61]">
-                RibbonBox™
+                Ribbon Box™
               </a>
-              . All Rights Reserved.
+              . Mọi quyền được bảo lưu.
             </span>
           </div>
         </div>
