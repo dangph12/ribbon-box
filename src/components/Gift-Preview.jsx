@@ -41,7 +41,8 @@ const DesignPreview = () => {
 
     const updatedUserInfo = {
       ...userInfo,
-      orderCode: orderCode
+      orderCode: orderCode,
+      price: price || totalPrice
     };
 
     const scriptUrl =
@@ -71,7 +72,6 @@ const DesignPreview = () => {
       })
       .catch(err => console.log(err));
 
-    console.log('User Info Submitted:', updatedUserInfo);
     if (e.target.paymentMethod.value === 'banking') {
       navigate('/payment', {
         state: { ...updatedUserInfo }
@@ -85,7 +85,7 @@ const DesignPreview = () => {
     <div className='flex justify-between p-8 space-x-8'>
       <div className='w-1/2 bg-white p-6 shadow-xl rounded-lg border border-gray-300'>
         <h2 className='text-2xl font-semibold text-gray-800 mb-6'>
-          Your Information
+          Thông tin người nhận
         </h2>
         <form onSubmit={handleSubmit} className='space-y-6'>
           <div className='flex items-center space-x-3'>
@@ -95,7 +95,7 @@ const DesignPreview = () => {
                 htmlFor='fullname'
                 className='block text-sm font-medium text-gray-700'
               >
-                Full Name
+                Họ và tên người nhận
               </label>
               <input
                 type='text'
@@ -116,7 +116,7 @@ const DesignPreview = () => {
                 htmlFor='address'
                 className='block text-sm font-medium text-gray-700'
               >
-                Shipping Address
+                Địa chỉ giao hàng
               </label>
               <input
                 type='text'
@@ -137,7 +137,7 @@ const DesignPreview = () => {
                 htmlFor='phone'
                 className='block text-sm font-medium text-gray-700'
               >
-                Phone Number
+                Số điện thoại người nhận
               </label>
               <input
                 type='tel'
@@ -155,7 +155,7 @@ const DesignPreview = () => {
             <FaCreditCard className='h-6 w-6 text-[#C25C61]' />
             <div className='flex-1'>
               <label className='block text-sm font-medium text-gray-700'>
-                Payment Method
+                Phương thức thanh toán
               </label>
               <select
                 name='paymentMethod'
@@ -174,7 +174,7 @@ const DesignPreview = () => {
               htmlFor='note'
               className='block text-sm font-medium text-gray-700'
             >
-              Order Note (Optional)
+              Ghi chú (Nếu có)
             </label>
             <textarea
               id='note'
@@ -182,7 +182,7 @@ const DesignPreview = () => {
               value={userInfo.note}
               onChange={handleChange}
               className='w-full p-4 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none transition duration-300'
-              placeholder='Any special instructions or requests?'
+              placeholder='Ví dụ: Giao hàng sau 5 giờ chiều'
             />
           </div>
 
@@ -192,7 +192,7 @@ const DesignPreview = () => {
               className='w-full py-3 bg-[#C25C61] text-white rounded-lg hover:bg-blue-700 focus:outline-none flex items-center justify-center space-x-2 transition duration-300'
             >
               <FaCheckCircle className='h-5 w-5' />
-              <span>Submit Order</span>
+              <span>Thanh toán</span>
             </button>
           </div>
         </form>
