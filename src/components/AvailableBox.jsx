@@ -1,14 +1,19 @@
 import { useState } from 'react';
-import { Link } from 'react-router';
+import { useNavigate } from 'react-router';
 import giftBoxes from '~/api/gift-boxes.json';
 
 export default function AvailableBox() {
   const [minPrice, setMinPrice] = useState(0);
   const [maxPrice, setMaxPrice] = useState(500000);
+  const navigate = useNavigate();
 
   const filteredGiftBoxes = giftBoxes.filter(
     p => p.price >= minPrice && p.price <= maxPrice
   );
+
+  const handleSubmit = (name, url, price) => {
+    navigate('/preview', { state: { name, url, price } });
+  }
 
   return (
     <div className='p-6'>
@@ -75,8 +80,8 @@ export default function AvailableBox() {
                     {product.discount}%
                   </span>
                 </div>
-                <button className='mt-4 w-full bg-[#AD3542] text-[#FFFDF1] py-2 rounded-xl'>
-                  <Link to={`/preview`}>Chọn Mẫu Này</Link>
+                <button className='mt-4 w-full bg-[#AD3542] text-[#FFFDF1] py-2 rounded-xl' onClick={() => handleSubmit(product.name, product.image, product.price)}>
+                  Chọn Mẫu Này
                 </button>
               </div>
             ))

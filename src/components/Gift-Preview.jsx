@@ -7,15 +7,14 @@ import {
   FaCreditCard,
   FaCheckCircle,
 } from "react-icons/fa";
-import logo from "../assets/2.png";
 
 const DesignPreview = () => {
   const location = useLocation();
-  const { url } = location.state || {};
+  const { name, url, price, totalPrice } = location.state || {};
   const navigate = useNavigate()
 
   const [userInfo, setUserInfo] = useState({
-    name: "",
+    fullname: "",
     address: "",
     phone: "",
     orderCode: "",
@@ -45,11 +44,23 @@ const DesignPreview = () => {
       orderCode: orderCode,
     };
 
-    const url = "https://script.google.com/macros/s/AKfycbwkIN7-7VCuveRzEIAn8lHWPUODfHZZhbfl0mNNH6Cfob9uhB66Ej0OW0GWYEEVl-4mnw/exec";
-    fetch(url, {
+    const scriptUrl = "https://script.google.com/macros/s/AKfycbwkIN7-7VCuveRzEIAn8lHWPUODfHZZhbfl0mNNH6Cfob9uhB66Ej0OW0GWYEEVl-4mnw/exec";
+
+    const formData = new URLSearchParams();
+    formData.append("Name", e.target.fullname.value);
+    formData.append("Address", e.target.address.value);
+    formData.append("Phone", e.target.phone.value);
+    formData.append("OrderCode", orderCode);
+    formData.append("PaymentMethod", e.target.paymentMethod.value);
+    formData.append("Note", e.target.note.value);
+    formData.append("Price", price);
+    formData.append("Image", url);
+    formData.append("ProductName", name);
+
+    fetch(scriptUrl, {
       method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: (`Name=${e.target.name.value}&Address=${e.target.address.value}&Phone=${e.target.phone.value}&OrderCode=${orderCode}&PaymentMethod=${e.target.paymentMethod.value}&Note=${e.target.note.value}`),
+      headers: { "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8" },
+      body: formData.toString(),
     }).then(res => res.text()).then(data => {
       console.log(data)
     }).catch(err => console.log(err));
@@ -64,41 +75,9 @@ const DesignPreview = () => {
     }
   };
 
-  if (!url) {
-    return (
-      <div>
-        <img
-          src={logo}
-          alt="Gift Box Design"
-          className="w-full max-w-2xl mx-auto shadow-2xl rounded-lg"
-        />
-      </div>
-    );
-  }
-
   return (
     <div className="flex justify-between p-8 space-x-8">
-      <div className="flex-1">
-        <h1 className="text-3xl font-semibold text-[#C25C61] text-center mb-6">
-          Gift Box Design Preview
-        </h1>
-        {url ? (
-          <img
-            src={url}
-            alt="Gift Box Design"
-            className="w-full max-w-2xl mx-auto shadow-2xl rounded-lg"
-            style={{ objectFit: "contain" }}
-          />
-        ) : (
-          <div className="w-full max-w-2xl mx-auto text-center text-gray-400">
-            <div className="bg-gray-200 p-8 rounded-lg">
-              <p className="text-xl text-gray-600">No Image Available</p>
-            </div>
-          </div>
-        )}
-      </div>
-
-      <div className="w-1/3 bg-white p-6 shadow-xl rounded-lg border border-gray-300">
+      <div className="w-1/2 bg-white p-6 shadow-xl rounded-lg border border-gray-300">
         <h2 className="text-2xl font-semibold text-gray-800 mb-6">
           Your Information
         </h2>
@@ -107,16 +86,16 @@ const DesignPreview = () => {
             <FaUserAlt className="h-6 w-6 text-[#C25C61]" />
             <div className="flex-1">
               <label
-                htmlFor="name"
+                htmlFor="fullname"
                 className="block text-sm font-medium text-gray-700"
               >
                 Full Name
               </label>
               <input
                 type="text"
-                id="name"
-                name="name"
-                value={userInfo.name}
+                id="fullname"
+                name="fullname"
+                value={userInfo.fullname}
                 onChange={handleChange}
                 required
                 className="w-full p-4 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none transition duration-300"
@@ -211,6 +190,18 @@ const DesignPreview = () => {
             </button>
           </div>
         </form>
+      </div>
+
+      <div className="w-1/2 bg-white p-6 shadow-xl rounded-lg border border-gray-300">
+        <h2 className="text-3xl font-semibold text-[#C25C61] text-center mb-6">
+          Thông tin hộp quà
+        </h2>
+        <img src={url} alt={name} className="w-full max-w-2xl max-h-96 mx-auto shadow-2xl rounded-lg" style={{ objectFit: "contain" }} />
+        <h3 className="text-xl font-semibold text-gray-700 mt-4">{name}</h3>
+        <p className="text-lg text-red-500 font-bold mt-2">
+          {(price || totalPrice).toLocaleString('vi-VN')}đ
+        </p>
+        <p className="text-sm text-gray-500 mt-1">Giá chưa bao gồm phí vận chuyển</p>
       </div>
     </div>
   );
