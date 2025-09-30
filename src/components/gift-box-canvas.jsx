@@ -11,6 +11,9 @@ import DropIndicator from './drop-indicator';
 import CanvasItem from './canvas-item';
 import GridOverlay from './grid-overlay';
 
+const CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+const UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
+
 const GiftBoxCanvas = ({ activeItem, dragOverCanvas, dragPosition }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -29,6 +32,8 @@ const GiftBoxCanvas = ({ activeItem, dragOverCanvas, dragPosition }) => {
     size: { width: 0, height: 0 },
     isValid: true
   });
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const checkPositionValid = (
     position,
@@ -86,19 +91,42 @@ const GiftBoxCanvas = ({ activeItem, dragOverCanvas, dragPosition }) => {
   };
 
   const handleSaveDesign = async () => {
-    dispatch(saveDesignData());
+    setIsLoading(true);
 
-    const blob = await generateCanvasImage();
-    if (!blob) return;
+    try {
+      dispatch(saveDesignData());
 
-    const url = URL.createObjectURL(blob);
-    console.log('Navigating to /preview with url:', url);
+      const blob = await generateCanvasImage();
+      const formData = new FormData();
+      formData.append('file', blob);
+      formData.append('upload_preset', UPLOAD_PRESET);
 
-    navigate('/preview', { state: { url } });
+      const response = await fetch(
+        `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
+        {
+          method: 'POST',
+          body: formData
+        }
+      );
 
-    setTimeout(() => {
-      dispatch(clearCanvas());
-    }, 500);
+      const data = await response.json();
+      console.log('Cloudinary upload response:', data);
+
+      if (!blob) return;
+
+      const url = data.secure_url;
+      console.log('Navigating to /preview with url:', url);
+
+      navigate('/preview', { state: { url } });
+
+      setTimeout(() => {
+        dispatch(clearCanvas());
+      }, 500);
+    } catch (err) {
+      console.error('Payment process error:', err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const generateCanvasImage = async () => {
@@ -190,8 +218,8 @@ const GiftBoxCanvas = ({ activeItem, dragOverCanvas, dragPosition }) => {
               );
             }
           } else {
-            ctx.fillStyle = '#e5e7eb'; 
-            ctx.strokeStyle = '#d1d5db'; 
+            ctx.fillStyle = '#e5e7eb';
+            ctx.strokeStyle = '#d1d5db';
             ctx.lineWidth = 2;
 
             const radius = 8;
@@ -289,9 +317,14 @@ const GiftBoxCanvas = ({ activeItem, dragOverCanvas, dragPosition }) => {
           </label>
           <button
             onClick={handleSaveDesign}
-            className='px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition-colors duration-200'
+            disabled={isLoading}
+            className={`px-4 py-2 text-white rounded transition-colors duration-200 ${
+              isLoading
+                ? 'bg-gray-400 cursor-not-allowed'
+                : 'bg-green-500 hover:bg-green-600'
+            }`}
           >
-            Thanh toán
+            {isLoading ? 'Đang xử lý...' : 'Thanh toán'}
           </button>
           <button
             onClick={() => dispatch(clearCanvas())}
@@ -340,6 +373,19 @@ const GiftBoxCanvas = ({ activeItem, dragOverCanvas, dragPosition }) => {
           )}
         </div>
       </div>
+
+      {/* Loading Modal */}
+      {isLoading && (
+        <div className='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50'>
+          <div className='bg-white rounded-lg p-8 shadow-xl text-center'>
+            <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-green-500 mx-auto mb-4'></div>
+            <h3 className='text-lg font-semibold text-gray-800 mb-2'>
+              Đang xử lý thanh toán
+            </h3>
+            <p className='text-gray-600'>Vui lòng chờ trong giây lát...</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
