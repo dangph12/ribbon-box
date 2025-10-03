@@ -1,48 +1,57 @@
 import { useLocation, useNavigate } from 'react-router';
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 import CryptoJS from 'crypto-js';
 
+const clientId = import.meta.env.VITE_PAYOS_CLIENT_ID;
+const apiKey = import.meta.env.VITE_PAYOS_API_KEY;
+const checksumKey = import.meta.env.VITE_PAYOS_CHECKSUM_KEY;
+const baseUrl = import.meta.env.VITE_BASE_URL || window.location.origin;
+
 const Payment = () => {
-  const navigate = useNavigate();
   const location = useLocation();
-  const { orderCode, price } = location.state || {};
+  const navigate = useNavigate();
+  const { orderCode, price, note, orderData } = location.state || {};
 
-  const clientId = import.meta.env.VITE_PAYOS_CLIENT_ID;
-  const apiKey = import.meta.env.VITE_PAYOS_API_KEY;
-  const checksumKey = import.meta.env.VITE_PAYOS_CHECKSUM_KEY;
-  const baseUrl = import.meta.env.VITE_BASE_URL || window.location.origin;
+  const generateSignature = useCallback(
+    ({ amount, cancelUrl, description, orderCode, returnUrl }) => {
+      const data = `amount=${amount}&cancelUrl=${cancelUrl}&description=${description}&orderCode=${orderCode}&returnUrl=${returnUrl}`;
 
-  const generateSignature = ({
-    amount,
-    cancelUrl,
-    description,
-    orderCode,
-    returnUrl
-  }) => {
-    const data = `amount=${amount}&cancelUrl=${cancelUrl}&description=${description}&orderCode=${orderCode}&returnUrl=${returnUrl}`;
+      const signature = CryptoJS.HmacSHA256(data, checksumKey).toString(
+        CryptoJS.enc.Hex
+      );
 
-    const signature = CryptoJS.HmacSHA256(data, checksumKey).toString(
-      CryptoJS.enc.Hex
-    );
-
-    return signature;
-  };
+      return signature;
+    },
+    []
+  );
 
   useEffect(() => {
+    if (!orderCode) {
+      return;
+    }
+
     const createPayment = async () => {
+      const description = `Đơn hàng ${orderCode}` + (note ? ` (${note})` : '');
+
       try {
+        const encodedOrderData = orderData
+          ? encodeURIComponent(JSON.stringify(orderData))
+          : '';
+        const returnUrl = `${baseUrl}/checkout?orderData=${encodedOrderData}`;
+        const cancelUrl = `${baseUrl}/order-failed`;
+
         const body = {
           amount: price,
           orderCode: orderCode,
-          description: `Đơn hàng ${orderCode}`,
-          returnUrl: `${baseUrl}/order-success`,
-          cancelUrl: `${baseUrl}`,
+          description: description,
+          returnUrl: returnUrl,
+          cancelUrl: cancelUrl,
           signature: generateSignature({
             amount: price,
-            cancelUrl: `${baseUrl}`,
-            description: `Đơn hàng ${orderCode}`,
+            cancelUrl: cancelUrl,
+            description: description,
             orderCode: orderCode,
-            returnUrl: `${baseUrl}/order-success`
+            returnUrl: returnUrl
           })
         };
 
@@ -61,24 +70,19 @@ const Payment = () => {
 
         const data = await res.json();
 
-        if (data.data.checkoutUrl) {
+        if (data && data.data && data.data.checkoutUrl) {
           window.location.href = data.data.checkoutUrl;
         } else {
           console.error('No checkout URL returned from PayOS');
         }
       } catch (err) {
         console.error('Payment error:', err);
+        navigate('/order-failed');
       }
     };
 
-    if (orderCode) {
-      createPayment();
-    } else {
-      console.error('Order code is missing!');
-      navigate('/');
-      return;
-    }
-  }, [orderCode]);
+    createPayment();
+  }, [orderCode, price, note, orderData, generateSignature]);
 
   return (
     <div className='flex flex-col items-center justify-center min-h-screen bg-gray-50 p-6'>

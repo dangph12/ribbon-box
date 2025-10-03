@@ -280,9 +280,6 @@ const giftBoxSlice = createSlice({
         }
       };
 
-      console.log('🎁 Gift Box Design Data:', designData);
-      console.log('📋 JSON for server:', JSON.stringify(designData, null, 2));
-
       return designData;
     }
   }

@@ -110,12 +110,10 @@ const GiftBoxCanvas = ({ activeItem, dragOverCanvas, dragPosition }) => {
       );
 
       const data = await response.json();
-      console.log('Cloudinary upload response:', data);
 
       if (!blob) return;
 
       const url = data.secure_url;
-      console.log('Navigating to /preview with url:', url);
 
       const name = `Hộp quà tự thiết kế`;
 

@@ -5,7 +5,8 @@ import {
   FaMapMarkerAlt,
   FaPhoneAlt,
   FaCreditCard,
-  FaCheckCircle
+  FaCheckCircle,
+  FaSpinner
 } from 'react-icons/fa';
 
 const DesignPreview = () => {
@@ -18,9 +19,11 @@ const DesignPreview = () => {
     address: '',
     phone: '',
     orderCode: '',
-    paymentMethod: 'cod',
+    paymentMethod: 'banking',
     note: ''
   });
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const generateRandom5Digit = () => {
     return Math.floor(10000 + Math.random() * 90000);
@@ -34,50 +37,42 @@ const DesignPreview = () => {
     }));
   };
 
-  const handleSubmit = e => {
+  const handleSubmit = async e => {
     e.preventDefault();
+    setIsLoading(true);
 
-    let orderCode = generateRandom5Digit();
+    try {
+      let orderCode = generateRandom5Digit();
 
-    const updatedUserInfo = {
-      ...userInfo,
-      orderCode: orderCode,
-      price: price || totalPrice
-    };
+      const updatedUserInfo = {
+        ...userInfo,
+        orderCode: orderCode,
+        price: price || totalPrice
+      };
 
-    const scriptUrl =
-      'https://script.google.com/macros/s/AKfycbwkIN7-7VCuveRzEIAn8lHWPUODfHZZhbfl0mNNH6Cfob9uhB66Ej0OW0GWYEEVl-4mnw/exec';
+      const orderData = {
+        fullname: e.target.fullname.value,
+        address: e.target.address.value,
+        phone: e.target.phone.value,
+        orderCode: orderCode,
+        paymentMethod: e.target.paymentMethod.value,
+        note: e.target.note.value,
+        price: price || totalPrice,
+        image: url,
+        productName: name
+      };
 
-    const formData = new URLSearchParams();
-    formData.append('Name', e.target.fullname.value);
-    formData.append('Address', e.target.address.value);
-    formData.append('Phone', e.target.phone.value);
-    formData.append('OrderCode', orderCode);
-    formData.append('PaymentMethod', e.target.paymentMethod.value);
-    formData.append('Note', e.target.note.value);
-    formData.append('Price', price || totalPrice);
-    formData.append('Image', url);
-    formData.append('ProductName', name);
-
-    fetch(scriptUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
-      },
-      body: formData.toString()
-    })
-      .then(res => res.text())
-      .then(data => {
-        console.log(data);
-      })
-      .catch(err => console.log(err));
-
-    if (e.target.paymentMethod.value === 'banking') {
-      navigate('/payment', {
-        state: { ...updatedUserInfo }
-      });
-    } else {
-      navigate('/order-success');
+      if (e.target.paymentMethod.value === 'banking') {
+        navigate('/payment', {
+          state: { ...updatedUserInfo, orderData }
+        });
+      } else {
+        navigate('/order-success', {
+          state: { orderData }
+        });
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -189,10 +184,24 @@ const DesignPreview = () => {
           <div>
             <button
               type='submit'
-              className='w-full py-3 bg-[#C25C61] text-white rounded-lg hover:bg-blue-700 focus:outline-none flex items-center justify-center space-x-2 transition duration-300'
+              disabled={isLoading}
+              className={`w-full py-3 text-white rounded-lg focus:outline-none flex items-center justify-center space-x-2 transition duration-300 ${
+                isLoading
+                  ? 'bg-gray-400 cursor-not-allowed'
+                  : 'bg-[#C25C61] hover:bg-blue-700'
+              }`}
             >
-              <FaCheckCircle className='h-5 w-5' />
-              <span>Thanh toán</span>
+              {isLoading ? (
+                <>
+                  <FaSpinner className='h-5 w-5 animate-spin' />
+                  <span>Đang xử lý...</span>
+                </>
+              ) : (
+                <>
+                  <FaCheckCircle className='h-5 w-5' />
+                  <span>Thanh toán</span>
+                </>
+              )}
             </button>
           </div>
         </form>
