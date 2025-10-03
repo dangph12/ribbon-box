@@ -1,7 +1,7 @@
 [
   {
     "id": 1,
-    "name": "Hộp quà một ngăn",
+    "name": "Hộp quà một ngăn (nhỏ)",
     "price": 200000,
     "oldPrice": 250000,
     "discount": 20,
@@ -10,11 +10,29 @@
   },
   {
     "id": 2,
+    "name": "Hộp quà một ngăn (lớn)",
+    "price": 220000,
+    "oldPrice": 275000,
+    "discount": 20,
+    "image": "https://res.cloudinary.com/djpv3n1e2/image/upload/v1759223331/h%E1%BB%99p_qu%C3%A0_m%E1%BB%99t_ng%C4%83n.jpg_nvn3xm.png",
+    "stock": true
+  },
+  {
+    "id": 3,
     "name": "Hộp quà hai ngăn",
     "price": 300000,
     "oldPrice": 400000,
     "discount": 25,
     "image": "https://res.cloudinary.com/djpv3n1e2/image/upload/v1759223803/h%E1%BB%99p_qu%C3%A0_hai_ng%C4%83n_zkrbys.png",
+    "stock": true
+  },
+  {
+    "id": 4,
+    "name": "Hộp quà ba ngăn",
+    "price": 400000,
+    "oldPrice": 500000,
+    "discount": 20,
+    "image": "https://res.cloudinary.com/djpv3n1e2/image/upload/v1759469945/z7075810671289_a438b98c7d03d4208fff2f9c00e93d55_vgreew.jpg",
     "stock": true
   }
 ]
