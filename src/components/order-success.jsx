@@ -23,13 +23,13 @@ const OrderSuccessPage = () => {
 
     const formData = new URLSearchParams();
     formData.append('Name', orderData.fullname);
-    formData.append('Address', orderData.address);
-    formData.append('Phone', orderData.phone);
-    formData.append('OrderCode', orderData.orderCode);
+    formData.append('Address', `${orderData.address}`);
+    formData.append('Phone', `'${orderData.phone}`);
+    formData.append('OrderCode', `${orderData.orderCode}`);
     formData.append('PaymentMethod', orderData.paymentMethod);
     formData.append('Note', orderData.note);
     formData.append('Price', orderData.price);
-    formData.append('Image', orderData.image);
+    formData.append('Image', `=HYPERLINK("${orderData.image}","View Image")`);
     formData.append('ProductName', orderData.productName);
     formData.append('Date', formattedDate);
 

@@ -53,7 +53,7 @@ const DesignPreview = () => {
       const orderData = {
         fullname: e.target.fullname.value,
         address: e.target.address.value,
-        phone: e.target.phone.value,
+        phone: e.target.phone.value.toString(),
         orderCode: orderCode,
         paymentMethod: e.target.paymentMethod.value,
         note: e.target.note.value,
