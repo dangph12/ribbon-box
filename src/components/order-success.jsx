@@ -42,6 +42,12 @@ const OrderSuccessPage = () => {
     });
   };
 
+  const storeInLocalStorage = orderData => {
+    const existingOrders = JSON.parse(localStorage.getItem('orders') || '[]');
+    existingOrders.push(orderData.orderCode);
+    localStorage.setItem('orders', JSON.stringify(existingOrders));
+  };
+
   useEffect(() => {
     const handleSuccessfulPayment = async () => {
       try {
@@ -58,6 +64,7 @@ const OrderSuccessPage = () => {
           setIsWritingToSheets(true);
 
           await writeToGoogleSheets(orderData);
+          storeInLocalStorage(orderData);
 
           setSheetsWriteComplete(true);
           setIsWritingToSheets(false);

@@ -12,6 +12,7 @@ import OrderSuccess from '../components/order-success';
 import OrderFailed from '../components/order-failed';
 import Payment from '../components/payment';
 import Checkout from '../components/checkout';
+import History from '~/app/history/page';
 
 const router = createBrowserRouter([
   {
@@ -57,6 +58,10 @@ const router = createBrowserRouter([
       {
         path: 'payment',
         element: <Payment />
+      },
+      {
+        path: 'history',
+        element: <History />
       }
     ]
   }
