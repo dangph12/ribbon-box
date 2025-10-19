@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 const GRID_SIZE = 20;
 const CANVAS_WIDTH = 440;
@@ -12,7 +12,7 @@ const checkCollision = (newItem, existingItems, gridSize) => {
   const newRight = newLeft + newItem.width * gridSize;
   const newBottom = newTop + newItem.height * gridSize;
 
-  return existingItems.some(item => {
+  return existingItems.some((item) => {
     if (item.id === newItem.id) return false;
 
     const existingLeft = item.position.x;
@@ -34,7 +34,7 @@ const findNearestAvailablePosition = (
   position,
   canvasItems,
   canvasSize,
-  gridSize
+  gridSize,
 ) => {
   const itemWidth = item.width * gridSize;
   const itemHeight = item.height * gridSize;
@@ -68,7 +68,7 @@ const findNearestAvailablePosition = (
 
       const candidatePosition = {
         x: snapToGrid(position.x + offsetX, gridSize),
-        y: snapToGrid(position.y + offsetY, gridSize)
+        y: snapToGrid(position.y + offsetY, gridSize),
       };
 
       if (
@@ -97,15 +97,15 @@ const initialState = {
   totalPrice: 0,
   canvasSize: {
     width: CANVAS_WIDTH,
-    height: CANVAS_HEIGHT
+    height: CANVAS_HEIGHT,
   },
   gridSize: GRID_SIZE,
   showGrid: true,
-  draggedItem: null
+  draggedItem: null,
 };
 
 const giftBoxSlice = createSlice({
-  name: 'giftBox',
+  name: "giftBox",
   initialState,
   reducers: {
     addItemToCanvas: (state, action) => {
@@ -116,7 +116,7 @@ const giftBoxSlice = createSlice({
       const { item, position } = action.payload;
       const snappedPosition = {
         x: snapToGrid(position.x, state.gridSize),
-        y: snapToGrid(position.y, state.gridSize)
+        y: snapToGrid(position.y, state.gridSize),
       };
 
       const itemWidth = item.width * state.gridSize;
@@ -144,8 +144,8 @@ const giftBoxSlice = createSlice({
         price: item.price || 0,
         size: {
           width: item.width * state.gridSize,
-          height: item.height * state.gridSize
-        }
+          height: item.height * state.gridSize,
+        },
       };
 
       state.canvasItems.push(newItem);
@@ -154,27 +154,27 @@ const giftBoxSlice = createSlice({
 
     moveItemOnCanvas: (state, action) => {
       const { itemId, position } = action.payload;
-      const item = state.canvasItems.find(item => item.id === itemId);
+      const item = state.canvasItems.find((item) => item.id === itemId);
       if (item) {
         const snappedPosition = {
           x: snapToGrid(position.x, state.gridSize),
-          y: snapToGrid(position.y, state.gridSize)
+          y: snapToGrid(position.y, state.gridSize),
         };
 
         const tempItem = {
           ...item,
           position: snappedPosition,
           width: item.size.width / state.gridSize,
-          height: item.size.height / state.gridSize
+          height: item.size.height / state.gridSize,
         };
-        const otherItems = state.canvasItems.filter(i => i.id !== itemId);
+        const otherItems = state.canvasItems.filter((i) => i.id !== itemId);
 
         const availablePosition = findNearestAvailablePosition(
           tempItem,
           snappedPosition,
           otherItems,
           state.canvasSize,
-          state.gridSize
+          state.gridSize,
         );
 
         item.position = {
@@ -182,25 +182,27 @@ const giftBoxSlice = createSlice({
             0,
             Math.min(
               availablePosition.x,
-              state.canvasSize.width - item.size.width
-            )
+              state.canvasSize.width - item.size.width,
+            ),
           ),
           y: Math.max(
             0,
             Math.min(
               availablePosition.y,
-              state.canvasSize.height - item.size.height
-            )
-          )
+              state.canvasSize.height - item.size.height,
+            ),
+          ),
         };
       }
     },
 
     removeItemFromCanvas: (state, action) => {
       const itemId = action.payload;
-      const itemToRemove = state.canvasItems.find(item => item.id === itemId);
+      const itemToRemove = state.canvasItems.find((item) => item.id === itemId);
 
-      state.canvasItems = state.canvasItems.filter(item => item.id !== itemId);
+      state.canvasItems = state.canvasItems.filter(
+        (item) => item.id !== itemId,
+      );
 
       if (itemToRemove) {
         state.totalPrice -= itemToRemove.price || 0;
@@ -215,11 +217,11 @@ const giftBoxSlice = createSlice({
       state.selectedItemId = action.payload;
     },
 
-    deselectItem: state => {
+    deselectItem: (state) => {
       state.selectedItemId = null;
     },
 
-    toggleGrid: state => {
+    toggleGrid: (state) => {
       state.showGrid = !state.showGrid;
     },
 
@@ -235,7 +237,7 @@ const giftBoxSlice = createSlice({
       state.draggedItem = action.payload;
     },
 
-    clearCanvas: state => {
+    clearCanvas: (state) => {
       state.canvasItems = [];
       state.selectedItemId = null;
       state.totalPrice = 0;
@@ -243,46 +245,46 @@ const giftBoxSlice = createSlice({
 
     resizeItem: (state, action) => {
       const { itemId, size } = action.payload;
-      const item = state.canvasItems.find(item => item.id === itemId);
+      const item = state.canvasItems.find((item) => item.id === itemId);
       if (item) {
         item.size = {
           width: snapToGrid(size.width, state.gridSize),
-          height: snapToGrid(size.height, state.gridSize)
+          height: snapToGrid(size.height, state.gridSize),
         };
       }
     },
 
-    saveDesignData: state => {
+    saveDesignData: (state) => {
       const designData = {
         id: Date.now().toString(),
         createdAt: new Date().toISOString(),
         canvasSize: {
           width: state.canvasSize.width,
-          height: state.canvasSize.height
+          height: state.canvasSize.height,
         },
         gridSize: state.gridSize,
-        items: state.canvasItems.map(item => ({
+        items: state.canvasItems.map((item) => ({
           id: item.id,
           originalId: item.originalId,
           position: {
             x: item.position.x,
-            y: item.position.y
+            y: item.position.y,
           },
           size: {
             width: item.size.width,
-            height: item.size.height
-          }
+            height: item.size.height,
+          },
         })),
         metadata: {
-          version: '1.0',
+          version: "1.0",
           totalItems: state.canvasItems.length,
-          appName: 'Ribbon Box Designer'
-        }
+          appName: "Ribbon Box Designer",
+        },
       };
 
       return designData;
-    }
-  }
+    },
+  },
 });
 
 export const {
@@ -297,7 +299,7 @@ export const {
   setDraggedItem,
   clearCanvas,
   resizeItem,
-  saveDesignData
+  saveDesignData,
 } = giftBoxSlice.actions;
 
 export default giftBoxSlice.reducer;

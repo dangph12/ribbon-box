@@ -1,12 +1,12 @@
-import React from 'react'
-import AvailableBox from '../../components/AvailableBox'
+import React from "react";
+import AvailableBox from "../../components/AvailableBox";
 
 function page() {
   return (
     <div>
-      <AvailableBox/>
+      <AvailableBox />
     </div>
-  )
+  );
 }
 
-export default page
+export default page;

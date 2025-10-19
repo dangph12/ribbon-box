@@ -1,10 +1,10 @@
 const DropIndicator = ({ position, size, isVisible, isValid = true }) => {
   if (!isVisible) return null;
 
-  const borderColor = isValid ? 'border-blue-500' : 'border-red-500';
-  const bgColor = isValid ? 'bg-blue-100' : 'bg-red-100';
-  const textColor = isValid ? 'text-blue-600' : 'text-red-600';
-  const message = isValid ? 'Drop here' : 'Cannot drop';
+  const borderColor = isValid ? "border-blue-500" : "border-red-500";
+  const bgColor = isValid ? "bg-blue-100" : "bg-red-100";
+  const textColor = isValid ? "text-blue-600" : "text-red-600";
+  const message = isValid ? "Drop here" : "Cannot drop";
 
   return (
     <div
@@ -13,13 +13,13 @@ const DropIndicator = ({ position, size, isVisible, isValid = true }) => {
         left: position.x,
         top: position.y,
         width: size.width,
-        height: size.height
+        height: size.height,
       }}
     >
       <div
         className={`absolute inset-0 flex items-center justify-center ${textColor} text-sm font-medium`}
       >
-        <div className='bg-white bg-opacity-80 px-2 py-1 rounded text-xs'>
+        <div className="bg-white bg-opacity-80 px-2 py-1 rounded text-xs">
           {message}
         </div>
       </div>

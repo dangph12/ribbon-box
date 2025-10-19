@@ -1,29 +1,29 @@
-import { useDispatch, useSelector } from 'react-redux';
-import { DndContext, DragOverlay } from '@dnd-kit/core';
-import GiftItemsContainer from '~/components/gift-items-container';
-import GiftBoxCanvas from '~/components/gift-box-canvas';
+import { useDispatch, useSelector } from "react-redux";
+import { DndContext, DragOverlay } from "@dnd-kit/core";
+import GiftItemsContainer from "~/components/gift-items-container";
+import GiftBoxCanvas from "~/components/gift-box-canvas";
 import {
   addItemToCanvas,
-  moveItemOnCanvas
-} from '~/store/features/gift-box-slice';
-import { useState } from 'react';
-import DragPreview from '~/components/drag-preview';
+  moveItemOnCanvas,
+} from "~/store/features/gift-box-slice";
+import { useState } from "react";
+import DragPreview from "~/components/drag-preview";
 
 const Page = () => {
   const dispatch = useDispatch();
-  const { gridSize } = useSelector(state => state.giftBox);
+  const { gridSize } = useSelector((state) => state.giftBox);
   const [activeItem, setActiveItem] = useState(null);
   const [dragOverCanvas, setDragOverCanvas] = useState(false);
   const [dragPosition, setDragPosition] = useState(null);
 
-  const handleDragStart = event => {
+  const handleDragStart = (event) => {
     setActiveItem(event.active.data.current);
     setDragPosition(null);
   };
 
-  const handleDragMove = event => {
+  const handleDragMove = (event) => {
     const { over } = event;
-    if (over && over.id === 'canvas') {
+    if (over && over.id === "canvas") {
       setDragOverCanvas(true);
       const canvasRect = over.rect;
       const dragX =
@@ -38,58 +38,58 @@ const Page = () => {
     }
   };
 
-  const handleDragOver = event => {
+  const handleDragOver = (event) => {
     const { over } = event;
-    if (over && over.id === 'canvas') {
+    if (over && over.id === "canvas") {
       setDragOverCanvas(true);
     } else {
       setDragOverCanvas(false);
     }
   };
 
-  const handleDragEnd = event => {
+  const handleDragEnd = (event) => {
     const { active, over } = event;
     setActiveItem(null);
     setDragOverCanvas(false);
     setDragPosition(null);
 
-    if (over && over.id === 'canvas') {
+    if (over && over.id === "canvas") {
       const canvasRect = over.rect;
       const activeRect = active.rect.current.translated;
       const item = active.data.current;
 
       const dropPosition = {
         x: Math.max(0, activeRect ? activeRect.left - canvasRect.left : 0),
-        y: Math.max(0, activeRect ? activeRect.top - canvasRect.top : 0)
+        y: Math.max(0, activeRect ? activeRect.top - canvasRect.top : 0),
       };
 
       if (item.originalId) {
         dispatch(
           moveItemOnCanvas({
             itemId: active.id,
-            position: dropPosition
-          })
+            position: dropPosition,
+          }),
         );
       } else {
         dispatch(
           addItemToCanvas({
             item,
-            position: dropPosition
-          })
+            position: dropPosition,
+          }),
         );
       }
     }
   };
 
   return (
-    <div className='h-screen flex flex-col'>
+    <div className="h-screen flex flex-col">
       <DndContext
         onDragStart={handleDragStart}
         onDragMove={handleDragMove}
         onDragOver={handleDragOver}
         onDragEnd={handleDragEnd}
       >
-        <div className='flex h-full max-w-full'>
+        <div className="flex h-full max-w-full">
           <GiftItemsContainer />
           <GiftBoxCanvas
             activeItem={activeItem}
@@ -101,7 +101,7 @@ const Page = () => {
           adjustScale={false}
           dropAnimation={{
             duration: 200,
-            easing: 'cubic-bezier(0.18, 0.67, 0.6, 1.22)'
+            easing: "cubic-bezier(0.18, 0.67, 0.6, 1.22)",
           }}
         >
           {activeItem && (
@@ -109,7 +109,7 @@ const Page = () => {
               style={{
                 transform: `translate(-${
                   (activeItem.width * gridSize) / 2
-                }px, -${(activeItem.height * gridSize) / 2}px)`
+                }px, -${(activeItem.height * gridSize) / 2}px)`,
               }}
             >
               <DragPreview item={activeItem} gridSize={gridSize} />

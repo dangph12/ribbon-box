@@ -12,9 +12,9 @@ const GridOverlay = ({ gridSize, canvasSize, showGrid }) => {
         y1={0}
         x2={x}
         y2={canvasSize.height}
-        stroke='#e5e7eb'
-        strokeWidth='0.5'
-      />
+        stroke="#e5e7eb"
+        strokeWidth="0.5"
+      />,
     );
   }
 
@@ -26,15 +26,15 @@ const GridOverlay = ({ gridSize, canvasSize, showGrid }) => {
         y1={y}
         x2={canvasSize.width}
         y2={y}
-        stroke='#e5e7eb'
-        strokeWidth='0.5'
-      />
+        stroke="#e5e7eb"
+        strokeWidth="0.5"
+      />,
     );
   }
 
   return (
     <svg
-      className='absolute inset-0 pointer-events-none z-0'
+      className="absolute inset-0 pointer-events-none z-0"
       width={canvasSize.width}
       height={canvasSize.height}
     >

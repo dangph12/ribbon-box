@@ -13,7 +13,8 @@ const OrderFailedPage = () => {
         </div>
 
         <p className="text-center text-lg text-gray-700 mb-6">
-          Rất tiếc, đã có lỗi xảy ra trong quá trình xử lý đơn hàng của bạn. Vui lòng thử lại hoặc liên hệ với bộ phận hỗ trợ khách hàng.
+          Rất tiếc, đã có lỗi xảy ra trong quá trình xử lý đơn hàng của bạn. Vui
+          lòng thử lại hoặc liên hệ với bộ phận hỗ trợ khách hàng.
         </p>
 
         <div className="flex justify-center mt-6">

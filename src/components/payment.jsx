@@ -1,6 +1,6 @@
-import { useLocation, useNavigate } from 'react-router';
-import { useEffect, useCallback } from 'react';
-import CryptoJS from 'crypto-js';
+import { useLocation, useNavigate } from "react-router";
+import { useEffect, useCallback } from "react";
+import CryptoJS from "crypto-js";
 
 const clientId = import.meta.env.VITE_PAYOS_CLIENT_ID;
 const apiKey = import.meta.env.VITE_PAYOS_API_KEY;
@@ -17,12 +17,12 @@ const Payment = () => {
       const data = `amount=${amount}&cancelUrl=${cancelUrl}&description=${description}&orderCode=${orderCode}&returnUrl=${returnUrl}`;
 
       const signature = CryptoJS.HmacSHA256(data, checksumKey).toString(
-        CryptoJS.enc.Hex
+        CryptoJS.enc.Hex,
       );
 
       return signature;
     },
-    []
+    [],
   );
 
   useEffect(() => {
@@ -31,12 +31,12 @@ const Payment = () => {
     }
 
     const createPayment = async () => {
-      const description = `Đơn hàng ${orderCode}` + (note ? ` (${note})` : '');
+      const description = `Đơn hàng ${orderCode}` + (note ? ` (${note})` : "");
 
       try {
         const encodedOrderData = orderData
           ? encodeURIComponent(JSON.stringify(orderData))
-          : '';
+          : "";
         const returnUrl = `${baseUrl}/checkout?orderData=${encodedOrderData}`;
         const cancelUrl = `${baseUrl}/order-failed`;
 
@@ -51,21 +51,21 @@ const Payment = () => {
             cancelUrl: cancelUrl,
             description: description,
             orderCode: orderCode,
-            returnUrl: returnUrl
-          })
+            returnUrl: returnUrl,
+          }),
         };
 
         const res = await fetch(
-          'https://api-merchant.payos.vn/v2/payment-requests',
+          "https://api-merchant.payos.vn/v2/payment-requests",
           {
-            method: 'POST',
+            method: "POST",
             headers: {
-              'Content-Type': 'application/json',
-              'x-client-id': clientId,
-              'x-api-key': apiKey
+              "Content-Type": "application/json",
+              "x-client-id": clientId,
+              "x-api-key": apiKey,
             },
-            body: JSON.stringify(body)
-          }
+            body: JSON.stringify(body),
+          },
         );
 
         const data = await res.json();
@@ -73,11 +73,11 @@ const Payment = () => {
         if (data && data.data && data.data.checkoutUrl) {
           window.location.href = data.data.checkoutUrl;
         } else {
-          console.error('No checkout URL returned from PayOS');
+          console.error("No checkout URL returned from PayOS");
         }
       } catch (err) {
-        console.error('Payment error:', err);
-        navigate('/order-failed');
+        console.error("Payment error:", err);
+        navigate("/order-failed");
       }
     };
 
@@ -85,11 +85,11 @@ const Payment = () => {
   }, [orderCode, price, note, orderData, generateSignature]);
 
   return (
-    <div className='flex flex-col items-center justify-center min-h-screen bg-gray-50 p-6'>
-      <h1 className='text-2xl font-semibold text-[#C25C61]'>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-6">
+      <h1 className="text-2xl font-semibold text-[#C25C61]">
         Đang chuyển hướng đến PayOS...
       </h1>
-      <p className='mt-4 text-gray-600'>Vui lòng chờ trong giây lát.</p>
+      <p className="mt-4 text-gray-600">Vui lòng chờ trong giây lát.</p>
     </div>
   );
 };
