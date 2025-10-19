@@ -1,38 +1,64 @@
 [
   {
     "id": 1,
-    "name": "Hộp quà một ngăn (nhỏ)",
+    "name": "Hộp Ngọt Ngào Nhỏ Bé",
     "price": 255000,
     "oldPrice": 320000,
     "discount": 20,
-    "image": "https://res.cloudinary.com/djpv3n1e2/image/upload/v1759223331/h%E1%BB%99p_qu%C3%A0_m%E1%BB%99t_ng%C4%83n.jpg_nvn3xm.png",
+    "thumbnail": "https://res.cloudinary.com/djpv3n1e2/image/upload/v1759223331/h%E1%BB%99p_qu%C3%A0_m%E1%BB%99t_ng%C4%83n.jpg_nvn3xm.png",
+    "images": [
+      "https://res.cloudinary.com/djpv3n1e2/image/upload/v1759223331/h%E1%BB%99p_qu%C3%A0_m%E1%BB%99t_ng%C4%83n.jpg_nvn3xm.png"
+    ],
+    "occasions": ["valentine", "ngay-phu-nu", "phu-nu-viet-nam"],
     "stock": true
   },
   {
     "id": 2,
-    "name": "Hộp quà một ngăn (lớn)",
+    "name": "Hộp Hạnh Phúc Đơn Giản",
     "price": 240000,
     "oldPrice": 300000,
     "discount": 20,
-    "image": "https://res.cloudinary.com/djpv3n1e2/image/upload/v1759469909/z7067769925732_6c8e0cf0cfdf65748e8030d5c19d7a2d_yhva6e.png",
+    "thumbnail": "https://res.cloudinary.com/djpv3n1e2/image/upload/v1759469909/z7067769925732_6c8e0cf0cfdf65748e8030d5c19d7a2d_yhva6e.png",
+    "images": [
+      "https://res.cloudinary.com/djpv3n1e2/image/upload/v1759469909/z7067769925732_6c8e0cf0cfdf65748e8030d5c19d7a2d_yhva6e.png"
+    ],
+    "occasions": ["valentine", "ngay-phu-nu", "nha-giao-viet-nam"],
     "stock": true
   },
   {
     "id": 3,
-    "name": "Hộp quà hai ngăn",
+    "name": "Hộp Yêu Thương Kép",
     "price": 280000,
     "oldPrice": 375000,
     "discount": 25,
-    "image": "https://res.cloudinary.com/djpv3n1e2/image/upload/v1759223803/h%E1%BB%99p_qu%C3%A0_hai_ng%C4%83n_zkrbys.png",
+    "thumbnail": "https://res.cloudinary.com/djpv3n1e2/image/upload/v1759223803/h%E1%BB%99p_qu%C3%A0_hai_ng%C4%83n_zkrbys.png",
+    "images": [
+      "https://res.cloudinary.com/djpv3n1e2/image/upload/v1759223803/h%E1%BB%99p_qu%C3%A0_hai_ng%C4%83n_zkrbys.png"
+    ],
+    "occasions": [
+      "valentine",
+      "ngay-phu-nu",
+      "phu-nu-viet-nam",
+      "nha-giao-viet-nam"
+    ],
     "stock": true
   },
   {
     "id": 4,
-    "name": "Hộp quà ba ngăn",
+    "name": "Hộp Trọn Vẹn Yêu Thương",
     "price": 380000,
     "oldPrice": 475000,
     "discount": 20,
-    "image": "https://res.cloudinary.com/djpv3n1e2/image/upload/v1759469945/z7075810671289_a438b98c7d03d4208fff2f9c00e93d55_vgreew.jpg",
+    "thumbnail": "https://res.cloudinary.com/djpv3n1e2/image/upload/v1759469945/z7075810671289_a438b98c7d03d4208fff2f9c00e93d55_vgreew.jpg",
+    "images": [
+      "https://res.cloudinary.com/djpv3n1e2/image/upload/v1759469945/z7075810671289_a438b98c7d03d4208fff2f9c00e93d55_vgreew.jpg"
+    ],
+    "occasions": [
+      "valentine",
+      "ngay-phu-nu",
+      "phu-nu-viet-nam",
+      "nha-giao-viet-nam"
+    ],
     "stock": true
   }
 ]

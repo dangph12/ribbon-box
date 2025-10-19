@@ -1,19 +1,25 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router';
+import { useNavigate, useSearchParams } from 'react-router';
 import giftBoxes from '~/api/gift-boxes.json';
 
 export default function AvailableBox() {
   const [minPrice, setMinPrice] = useState(0);
   const [maxPrice, setMaxPrice] = useState(500000);
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
+  const occasion = searchParams.get('occasion');
+
   const filteredGiftBoxes = giftBoxes.filter(
-    p => p.price >= minPrice && p.price <= maxPrice
+    p =>
+      p.price >= minPrice &&
+      p.price <= maxPrice &&
+      (!occasion || p.occasions.includes(occasion))
   );
 
   const handleSubmit = (name, url, price) => {
     navigate('/preview', { state: { name, url, price } });
-  }
+  };
 
   return (
     <div className='p-6'>
@@ -50,8 +56,76 @@ export default function AvailableBox() {
             step='50'
             value={maxPrice}
             onChange={e => setMaxPrice(Number(e.target.value))}
-            className='w-full'
+            className='w-full mb-6'
           />
+
+          <h2 className='text-lg font-semibold mb-4 text-[#AD3542]'>
+            Lọc Theo Dịp
+          </h2>
+
+          <div className='space-y-2'>
+            <label className='flex items-center gap-2 text-sm text-gray-700 cursor-pointer'>
+              <input
+                type='radio'
+                name='occasion'
+                value=''
+                checked={!occasion}
+                onChange={() => navigate('/available')}
+                className='text-[#AD3542]'
+              />
+              Tất cả
+            </label>
+
+            <label className='flex items-center gap-2 text-sm text-gray-700 cursor-pointer'>
+              <input
+                type='radio'
+                name='occasion'
+                value='valentine'
+                checked={occasion === 'valentine'}
+                onChange={() => navigate('/available?occasion=valentine')}
+                className='text-[#AD3542]'
+              />
+              Quà Valentine 14-2
+            </label>
+
+            <label className='flex items-center gap-2 text-sm text-gray-700 cursor-pointer'>
+              <input
+                type='radio'
+                name='occasion'
+                value='ngay-phu-nu'
+                checked={occasion === 'ngay-phu-nu'}
+                onChange={() => navigate('/available?occasion=ngay-phu-nu')}
+                className='text-[#AD3542]'
+              />
+              Ngày phụ nữ 8/3
+            </label>
+
+            <label className='flex items-center gap-2 text-sm text-gray-700 cursor-pointer'>
+              <input
+                type='radio'
+                name='occasion'
+                value='phu-nu-viet-nam'
+                checked={occasion === 'phu-nu-viet-nam'}
+                onChange={() => navigate('/available?occasion=phu-nu-viet-nam')}
+                className='text-[#AD3542]'
+              />
+              Phụ nữ Việt Nam 20/10
+            </label>
+
+            <label className='flex items-center gap-2 text-sm text-gray-700 cursor-pointer'>
+              <input
+                type='radio'
+                name='occasion'
+                value='nha-giao-viet-nam'
+                checked={occasion === 'nha-giao-viet-nam'}
+                onChange={() =>
+                  navigate('/available?occasion=nha-giao-viet-nam')
+                }
+                className='text-[#AD3542]'
+              />
+              Quà ngày nhà giáo 20/11
+            </label>
+          </div>
         </div>
 
         <div className='w- md:w-3/4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 min-h-[300px]'>
@@ -62,7 +136,7 @@ export default function AvailableBox() {
                 className='border rounded-2xl shadow-lg p-4 min-h-[320px] flex flex-col justify-between'
               >
                 <img
-                  src={product.image}
+                  src={product.thumbnail}
                   alt={product.name}
                   className='rounded-xl mb-3 w-full'
                 />
@@ -80,8 +154,13 @@ export default function AvailableBox() {
                     {product.discount}%
                   </span>
                 </div>
-                <button className='mt-4 w-full bg-[#AD3542] text-[#FFFDF1] py-2 rounded-xl' onClick={() => handleSubmit(product.name, product.image, product.price)}>
-                  Chọn Mẫu Này
+                <button
+                  className='mt-4 w-full bg-[#AD3542] text-[#FFFDF1] py-2 rounded-xl'
+                  onClick={() =>
+                    handleSubmit(product.name, product.thumbnail, product.price)
+                  }
+                >
+                  Mua ngay
                 </button>
               </div>
             ))

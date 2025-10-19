@@ -16,10 +16,16 @@ function Header() {
   ];
 
   const serviceItems = [
-    { to: '/service/option1', label: 'Quà 8-4' },
-    { to: '/service/option2', label: 'Quà Sinh Nhật' },
-    { to: '/service/option3', label: 'Quà Kỉ Niệm' },
-    { to: '/service/option4', label: 'Quà Cưới' }
+    { to: '/available?occasion=valentine', label: 'Quà Valentine 14-2' },
+    { to: '/available?occasion=ngay-phu-nu', label: 'Ngày phụ nữ 8/3' },
+    {
+      to: '/available?occasion=phu-nu-viet-nam',
+      label: 'Phụ nữ Việt Nam 20/10'
+    },
+    {
+      to: '/available?occasion=nha-giao-viet-nam',
+      label: 'Quà ngày nhà giáo Việt Nam 20/11'
+    }
   ];
 
   return (
@@ -68,7 +74,7 @@ function Header() {
                     onClick={() => setShowDropdown(!showDropdown)}
                     className='flex items-center gap-1 py-2 text-[#AD3542] hover:text-[#C25C61] text-lg'
                   >
-                    Dịch Vụ <FiChevronDown className='mt-[2px]' />
+                    Quà tặng nhân ngày <FiChevronDown className='mt-[2px]' />
                   </button>
 
                   {showDropdown && (

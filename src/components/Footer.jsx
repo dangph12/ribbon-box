@@ -9,15 +9,10 @@ const footerItems = [
         label: 'Facebook',
         href: 'https://www.facebook.com/profile.php?id=61580628163581'
       },
-      { label: 'Tiktok', href: 'https://www.tiktok.com/@ribbon.box5' }
-    ],
-    type: 'external'
-  },
-  {
-    title: 'Điều hướng',
-    links: [
-      { label: 'Chính sách bảo mật', href: '#' },
-      { label: 'Điều khoản & Điều kiện', href: '#' }
+      {
+        label: 'Tiktok',
+        href: 'https://www.tiktok.com/@ribbonbox.daily'
+      }
     ],
     type: 'external'
   }
