@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router';
+import { useNavigate, useSearchParams, Link } from 'react-router';
 import giftBoxes from '~/api/gift-boxes.json';
 
 export default function AvailableBox() {
@@ -135,14 +135,18 @@ export default function AvailableBox() {
                 key={product.id}
                 className='border rounded-2xl shadow-lg p-4 min-h-[320px] flex flex-col justify-between'
               >
-                <img
-                  src={product.thumbnail}
-                  alt={product.name}
-                  className='rounded-xl mb-3 w-full'
-                />
-                <h2 className='text-lg font-semibold text-[#AD3542]'>
-                  {product.name}
-                </h2>
+                <Link to={`/available/${product.slug}`}>
+                  <img
+                    src={product.thumbnail}
+                    alt={product.name}
+                    className='rounded-xl mb-3 w-full cursor-pointer hover:opacity-80 transition'
+                  />
+                </Link>
+                <Link to={`/available/${product.slug}`}>
+                  <h2 className='text-lg font-semibold text-[#AD3542] hover:text-[#C25C61] cursor-pointer transition'>
+                    {product.name}
+                  </h2>
+                </Link>
                 <div className='flex items-center gap-2 mt-2'>
                   <span className='text-red-500 font-bold'>
                     {product.price.toLocaleString('vi-VN')}đ
@@ -155,7 +159,7 @@ export default function AvailableBox() {
                   </span>
                 </div>
                 <button
-                  className='mt-4 w-full bg-[#AD3542] text-[#FFFDF1] py-2 rounded-xl'
+                  className='mt-4 w-full bg-[#AD3542] text-[#FFFDF1] py-2 rounded-xl hover:bg-[#C25C61] transition'
                   onClick={() =>
                     handleSubmit(product.name, product.thumbnail, product.price)
                   }

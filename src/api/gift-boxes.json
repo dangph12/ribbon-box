@@ -2,6 +2,7 @@
   {
     "id": 1,
     "name": "Hộp Ngọt Ngào Nhỏ Bé",
+    "slug": "hop-ngot-ngao-nho-be",
     "price": 255000,
     "oldPrice": 320000,
     "discount": 20,
@@ -10,11 +11,14 @@
       "https://res.cloudinary.com/djpv3n1e2/image/upload/v1759223331/h%E1%BB%99p_qu%C3%A0_m%E1%BB%99t_ng%C4%83n.jpg_nvn3xm.png"
     ],
     "occasions": ["valentine", "ngay-phu-nu", "phu-nu-viet-nam"],
+    "description": "Hộp quà nhỏ xinh với nến thơm cao cấp, hoàn hảo cho những dịp đặc biệt như Valentine, Ngày Phụ nữ 8/3, và Ngày Phụ nữ Việt Nam 20/10. Nến thơm mang hương thơm nhẹ nhàng, giúp tạo không gian ấm cúng và lãng mạn. Thiết kế tinh tế, phù hợp để tặng người thân yêu, bạn bè hoặc đồng nghiệp.",
+    "giftItems": ["Nến thơm"],
     "stock": true
   },
   {
     "id": 2,
     "name": "Hộp Hạnh Phúc Đơn Giản",
+    "slug": "hop-hanh-phuc-don-gian",
     "price": 240000,
     "oldPrice": 300000,
     "discount": 20,
@@ -23,11 +27,14 @@
       "https://res.cloudinary.com/djpv3n1e2/image/upload/v1759469909/z7067769925732_6c8e0cf0cfdf65748e8030d5c19d7a2d_yhva6e.png"
     ],
     "occasions": ["valentine", "ngay-phu-nu", "nha-giao-viet-nam"],
+    "description": "Hộp quà đơn giản nhưng đầy ý nghĩa với cốc lớn chất lượng cao, lý tưởng cho Valentine, Ngày Phụ nữ 8/3, và Ngày Nhà giáo Việt Nam 20/11. Cốc có thiết kế hiện đại, dung tích lớn phù hợp cho cà phê, trà, hoặc nước uống hàng ngày. Món quà thiết thực và tinh tế, thể hiện sự quan tâm đến người nhận.",
+    "giftItems": ["Cốc lớn"],
     "stock": true
   },
   {
     "id": 3,
     "name": "Hộp Yêu Thương Kép",
+    "slug": "hop-yeu-thuong-kep",
     "price": 280000,
     "oldPrice": 375000,
     "discount": 25,
@@ -41,11 +48,14 @@
       "phu-nu-viet-nam",
       "nha-giao-viet-nam"
     ],
+    "description": "Hộp quà hai ngăn đáng yêu với gấu bông mềm mại, phù hợp cho mọi dịp đặc biệt: Valentine, Ngày Phụ nữ 8/3, Ngày Phụ nữ Việt Nam 20/10, và Ngày Nhà giáo 20/11. Gấu bông được làm từ chất liệu an toàn, thiết kế dễ thương, mang lại cảm giác ấm áp và gần gũi. Đây là món quà tuyệt vời để bày tỏ tình cảm yêu thương với người thân, bạn bè, hoặc thầy cô.",
+    "giftItems": ["Gấu bông"],
     "stock": true
   },
   {
     "id": 4,
     "name": "Hộp Trọn Vẹn Yêu Thương",
+    "slug": "hop-tron-ven-yeu-thuong",
     "price": 380000,
     "oldPrice": 475000,
     "discount": 20,
@@ -59,6 +69,8 @@
       "phu-nu-viet-nam",
       "nha-giao-viet-nam"
     ],
+    "description": "Hộp quà ba ngăn cao cấp với bộ sưu tập đầy đủ: Khăn tay sang trọng, xà phòng thơm tự nhiên, cốc nhỏ tinh tế, và hộp trà cao cấp. Đây là món quà hoàn hảo cho mọi dịp quan trọng như Valentine, Ngày Phụ nữ 8/3, Ngày Phụ nữ Việt Nam 20/10, và Ngày Nhà giáo 20/11. Mỗi món đồ được tuyển chọn kỹ lưỡng, kết hợp hài hòa tạo nên một set quà trọn vẹn đầy ý nghĩa. Thể hiện sự chu đáo và tinh tế của người tặng.",
+    "giftItems": ["Khăn tay", "Xà phòng", "Cốc nhỏ", "Hộp trà"],
     "stock": true
   }
 ]

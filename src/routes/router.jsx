@@ -1,7 +1,6 @@
 import { createBrowserRouter } from 'react-router';
 
 import DesignGiftBox from '~/app/design-giftbox/page';
-import HomePage from '~/app/page';
 import HomepageLayout from '../layouts/homepageLayout';
 import Homepage from '../app/homepage/page';
 import AboutUs from '../app/main-about-us/page';
@@ -13,6 +12,7 @@ import OrderFailed from '../components/order-failed';
 import Payment from '../components/payment';
 import Checkout from '../components/checkout';
 import History from '~/app/history/page';
+import GiftBoxDetail from '~/app/available/[slug]/page';
 
 const router = createBrowserRouter([
   {
@@ -38,6 +38,10 @@ const router = createBrowserRouter([
       {
         path: 'available',
         element: <AvailableBox />
+      },
+      {
+        path: 'available/:slug',
+        element: <GiftBoxDetail />
       },
       {
         path: 'preview',
